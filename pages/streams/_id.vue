@@ -82,12 +82,15 @@ export default {
       }
     }
     localPC.ontrack = (event) => {
+      console.log('ontrack event:' + event)
       if (event.streams[0]) {
+        console.log(event.streams[0])
         this.$refs.remoteVideo.srcObject = event.streams[0]
       }
     }
     this.$socket.on('message', async (data) => {
       if (data.type === 'offer') {
+        console.log('offer: ' + offer)
         await localPC.setRemoteDescription(new RTCSessionDescription(data))
         const answer = await localPC.createAnswer()
         await localPC.setLocalDescription(answer)
@@ -96,6 +99,7 @@ export default {
           data: localPC.localDescription
         }))
       } else if (data.type === 'answer') {
+        console.log('answer:' + data)
         await localPC.setRemoteDescription(new RTCSessionDescription(data))
       } else {
         await localPC.addIceCandidate(new RTCIceCandidate(data))
