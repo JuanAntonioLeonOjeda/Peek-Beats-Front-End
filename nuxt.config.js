@@ -54,12 +54,12 @@ export default {
     sockets: [
       {
         name: 'test',
-        url: 'https://peek-beats.herokuapp.com/'
+        url: 'https://peek-beats.herokuapp.com'
       }
     ],
     server: {
       cors: {
-        origin: 'http://localhost:3000/'
+        origin: 'https://peek-beats.netlify.app'
       }
     }
   },
