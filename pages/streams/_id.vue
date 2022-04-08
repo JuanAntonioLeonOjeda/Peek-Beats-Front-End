@@ -2,6 +2,7 @@
   <div id="mainFrame">
     Your stream room is: {{ roomId }}
     <video id="localVideo" ref="localVideo" autoplay muted>LocalVideo</video>
+    <video id="remoteVideo" ref="remoteVideo" autoplay>RemoteVideo</video>
     <div v-if="role === 'streamer'" class="bottom-bar d-flex justify-center">
       <v-btn class="mx-2" fab @click="offCamera()">
         <v-icon dark>
@@ -56,7 +57,7 @@ export default {
   async mounted () {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true })
     this.$refs.localVideo.srcObject = stream
-    this.$store.commit('setting/setCamera', {
+    this.$store.commit('setCamera', {
       camera: stream
     })
     stream.getTracks().forEach((track) => {
@@ -106,7 +107,7 @@ export default {
   },
   methods: {
     offCamera () {
-      this.$store.state.setting.camera.getVideoTracks().forEach((track) => {
+      this.$store.state.camera.getVideoTracks().forEach((track) => {
         track.enabled = !track.enabled
       })
     }
