@@ -48,7 +48,6 @@ export default {
   name: 'CreateStreamButton',
   data () {
     return {
-      // genres: [{ id: 1, name: 'Jazz' }, { id: 2, name: 'Rock' }, { id: 3, name: 'Electro' }],
       genres: [],
       genre: ''
     }
