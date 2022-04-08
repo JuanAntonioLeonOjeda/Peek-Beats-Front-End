@@ -2,7 +2,9 @@ export const state = () => ({
   roomId: '',
   role: 'viewer',
   streamVideo: '',
-  streamInfo: {}
+  streamInfo: {},
+  overlay: false,
+  camera: null
 })
 
 export const mutations = {
@@ -17,6 +19,12 @@ export const mutations = {
   },
   getStreamInfo (state, info) {
     state.streamInfo = info
+  },
+  setOverlay (state, payload) {
+    state.overlay = payload.overlay
+  },
+  setCamera (state, payload) {
+    state.camera = payload.camera
   }
 }
 
