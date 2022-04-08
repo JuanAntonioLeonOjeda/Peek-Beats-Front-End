@@ -26,6 +26,7 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
+    { src: '~plugins/vue-carousel-3d', ssr: false },
     '~/plugins/socket.io.js'
   ],
 
@@ -43,8 +44,24 @@ export default {
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     // https://go.nuxtjs.dev/axios
-    '@nuxtjs/axios'
+    '@nuxtjs/axios',
+    '@nuxtjs/auth'
   ],
+
+  io: {
+    // Options
+    sockets: [
+      {
+        name: 'test',
+        url: 'http://localhost:5000/'
+      }
+    ],
+    server: {
+      cors: {
+        origin: 'http://localhost:3000/'
+      }
+    }
+  },
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
