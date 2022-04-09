@@ -54,7 +54,7 @@ export default {
     sockets: [
       {
         name: 'test',
-        url: 'https://peek-beats.herokuapp.com'
+        url: 'https://peer-js-server-prueba.herokuapp.com/'
       }
     ],
     server: {
@@ -103,7 +103,7 @@ export default {
   },
 
   env: {
-    WS_URL: process.env.WS_URL || 'https://peek-beats.herokuapp.com/'
+    WS_URL: process.env.WS_URL || 'https://peer-js-server-prueba.herokuapp.com/'
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
