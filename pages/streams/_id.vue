@@ -103,7 +103,7 @@ export default {
         const answer = await localPC.createAnswer()
         await localPC.setLocalDescription(answer)
         await this.$socket.emit('message', JSON.stringify({
-          room: this.room,
+          room: this.roomId,
           data: localPC.localDescription
         }))
       } else if (data.type === 'answer') {
@@ -115,7 +115,7 @@ export default {
     })
   },
   async beforeDestroy () {
-    await this.$socket.emit('leave', this.room)
+    await this.$socket.emit('leave', this.roomId)
   },
   methods: {
     offCamera () {
