@@ -49,9 +49,9 @@ export default {
     const lastId = localStorage.getItem('lastId')
     console.log('lastId: ' + lastId)
     if (lastId) {
-      await this.$socket.emit('leave', this.roomId)
+      await this.$socket.emit('leave', lastId)
     }
-    await this.$socket.emit('join', lastId)
+    await this.$socket.emit('join', this.roomId)
     localStorage.setItem('lastId', this.roomId)
   },
   async mounted () {
