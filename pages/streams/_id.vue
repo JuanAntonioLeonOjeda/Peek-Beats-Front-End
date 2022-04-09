@@ -70,19 +70,19 @@ export default {
     await localPC.setLocalDescription(offer)
     console.log('offer: ' + offer)
     console.log('localPC: ' + localPC)
-    await this.$socket.emit('message', JSON.stringify({
+    await this.$socket.emit('message', {
       room: this.roomId,
       data: localPC.localDescription
-    }))
+    })
     console.log('message emitted')
     localPC.onicecandidate = async (event) => {
       console.log('event onicecandidate: ' + event)
       if (event.candidate) {
         console.log('enent.candidate = true => ' + event.candidate)
-        await this.$socket.emit('message', JSON.stringify({
+        await this.$socket.emit('message', {
           room: this.roomId,
           data: event.candidate
-        }))
+        })
       } else {
         // eslint-disable-next-line
         console.log('allhasbeensent')
@@ -102,10 +102,10 @@ export default {
         await localPC.setRemoteDescription(new RTCSessionDescription(data))
         const answer = await localPC.createAnswer()
         await localPC.setLocalDescription(answer)
-        await this.$socket.emit('message', JSON.stringify({
+        await this.$socket.emit('message', {
           room: this.roomId,
           data: localPC.localDescription
-        }))
+        })
       } else if (data.type === 'answer') {
         console.log('answer:' + data)
         await localPC.setRemoteDescription(new RTCSessionDescription(data))
