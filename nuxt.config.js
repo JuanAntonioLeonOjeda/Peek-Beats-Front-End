@@ -102,6 +102,10 @@ export default {
     }
   },
 
+  env: {
+    WS_URL: process.env.WS_URL || 'https://peek-beats.herokuapp.com/'
+  },
+
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
   }

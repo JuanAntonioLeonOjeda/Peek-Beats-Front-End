@@ -53,10 +53,6 @@ export default {
     }
     await this.$socket.emit('join', lastId)
     localStorage.setItem('lastId', this.roomId)
-
-    this.$socket.on('connect', () => {
-      console.log('My Id is: ' + this.socket.id)
-    })
   },
   async mounted () {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true })
