@@ -35,7 +35,6 @@ const servers = {
 }
 
 const RPC = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection
-
 const localPC = new RPC(servers)
 
 export default {
@@ -56,10 +55,12 @@ export default {
   },
   async mounted () {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true })
+
     this.$refs.localVideo.srcObject = stream
     this.$store.commit('setCamera', {
       camera: stream
     })
+
     stream.getTracks().forEach((track) => {
       localPC.addTrack(track, stream)
     })
@@ -71,7 +72,9 @@ export default {
       data: localPC.localDescription
     }))
     localPC.onicecandidate = async (event) => {
+      console.log('event onicecandidate: ' + event)
       if (event.candidate) {
+        console.log('enent.candidate = true => ' + event.candidate)
         await this.$socket.emit('message', JSON.stringify({
           room: this.roomId,
           data: event.candidate
@@ -83,6 +86,7 @@ export default {
     }
     localPC.ontrack = (event) => {
       console.log('ontrack event:' + event)
+      console.log(event.streams)
       if (event.streams[0]) {
         console.log(event.streams[0])
         this.$refs.remoteVideo.srcObject = event.streams[0]
