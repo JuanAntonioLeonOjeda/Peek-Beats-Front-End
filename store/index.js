@@ -25,7 +25,6 @@ export const mutations = {
   },
   setCamera (state, payload) {
     state.camera = payload.camera
-    console.log(state.camera) // console.log de prueba
   }
 }
 

@@ -47,6 +47,7 @@ export default {
   },
   async beforeMount () {
     const lastId = localStorage.getItem('lastId')
+    console.log('lastId: ' + lastId)
     if (lastId) {
       await this.$socket.emit('leave', this.roomId)
     }
@@ -67,10 +68,13 @@ export default {
 
     const offer = await localPC.createOffer()
     await localPC.setLocalDescription(offer)
+    console.log('offer: ' + offer)
+    console.log('localPC: ' + localPC)
     await this.$socket.emit('message', JSON.stringify({
       room: this.roomId,
       data: localPC.localDescription
     }))
+    console.log('message emitted')
     localPC.onicecandidate = async (event) => {
       console.log('event onicecandidate: ' + event)
       if (event.candidate) {
