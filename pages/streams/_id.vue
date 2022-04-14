@@ -123,7 +123,16 @@ export default {
   data () {
     return {
       room: this.$route.params.id,
-      streamerRole: this.$store.state.streamer
+      streamerRole: this.$store.state.streamer,
+      userName: '',
+      stream: this.$store.state.streamInfo,
+      genre: '',
+      like: false
+    }
+  },
+  computed: {
+    getTotalViewers () {
+      return this.stream.currentViewers.length
     }
   },
   async beforeMount () {
