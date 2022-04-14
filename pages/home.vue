@@ -2,29 +2,36 @@
   <div>
     <NavBar />
     <NavigationDrawer />
+    <!-- <GenreSelect />
+    <GenreAlert v-if="$store.state.genreAlert" />
     <CreateStreamButton />
-    <GenreSelect />
     <LiveStreams />
-    <TopFive />
+    <TopFive /> -->
+    <FooterBar />
   </div>
 </template>
 
 <script>
-import NavigationDrawer from '@/components/NavigationDrawer.vue'
 import NavBar from '@/components/NavBar.vue'
-import LiveStreams from '@/components/LiveStreams.vue'
-import GenreSelect from '@/components/GenreSelect.vue'
-import TopFive from '@/components/TopFive.vue'
-import CreateStreamButton from '@/components/CreateStreamButton.vue'
+import NavigationDrawer from '@/components/NavigationDrawer.vue'
+// import GenreSelect from '@/components/GenreSelect.vue'
+// import GenreAlert from '@/components/GenreAlert.vue'
+// import CreateStreamButton from '@/components/CreateStreamButton.vue'
+// import LiveStreams from '@/components/LiveStreams.vue'
+// import TopFive from '@/components/TopFive.vue'
+import FooterBar from '@/components/FooterBar.vue'
+
 export default {
   name: 'HomePage',
   components: {
-    NavigationDrawer,
     NavBar,
-    LiveStreams,
-    GenreSelect,
-    TopFive,
-    CreateStreamButton
+    NavigationDrawer,
+    // GenreSelect,
+    // GenreAlert,
+    // CreateStreamButton,
+    // LiveStreams,
+    // TopFive,
+    FooterBar
   },
   data () {
     return {
@@ -33,3 +40,7 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+
+</style>
