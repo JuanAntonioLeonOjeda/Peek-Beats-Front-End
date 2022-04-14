@@ -168,11 +168,6 @@ export default {
 </script>
 
 <style scoped>
-.newTo {
-  background-image: url("../static/cassette-blur.jpg");
-  background-size: auto;
-  background-position: center;
-}
 .text-danger {
   display: none;
 }
