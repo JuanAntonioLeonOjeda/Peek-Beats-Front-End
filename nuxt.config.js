@@ -65,7 +65,6 @@ export default {
     redirect: {
       login: '/login',
       logout: '/',
-      callback: '/',
       home: '/home'
     },
     watchLoggedIn: true,

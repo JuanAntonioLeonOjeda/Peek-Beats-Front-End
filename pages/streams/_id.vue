@@ -1,7 +1,13 @@
 <template>
   <div id="mainFrame">
-    <video id="localVideo" ref="localVideo" autoplay muted>LocalVideo</video>
-    <video id="remoteVideo" ref="remoteVideo" autoplay>RemoteVideo</video>
+    <div v-if="streamerRole">
+      <video id="bigCinema" ref="localVideo" autoplay muted>LocalVideo</video>
+      <!-- <video id="remoteVideo" ref="remoteVideo" autoplay>RemoteVideo</video> -->
+    </div>
+    <div v-else>
+      <!-- <video id="bigCinema" ref="localVideo" autoplay muted>LocalVideo</video> -->
+      <video video id="bigCinema" ref="remoteVideo" autoplay>RemoteVideo</video>
+    </div>
     <div class="bottom-bar d-flex justify-center">
       <v-btn class="mx-2" fab @click="offCamera()">
         <v-icon dark>
@@ -115,16 +121,16 @@ export default {
 
 <style lang="scss">
   #mainFrame {
-    #localVideo {
-      z-index: 100;
-      position: absolute;
-      right: 25px;
-      bottom: 25px;
-      background-color: #47494e;
-      height: 150px;
-      width: 200px;
-    }
-    #remoteVideo {
+    // #localVideo {
+    //   z-index: 100;
+    //   position: absolute;
+    //   right: 25px;
+    //   bottom: 25px;
+    //   background-color: #47494e;
+    //   height: 150px;
+    //   width: 200px;
+    // }
+    #bigCinema {
       z-index: 50;
       height: calc(100vh - 64px);
       width: 100vw;
