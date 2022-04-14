@@ -77,7 +77,19 @@
                     <v-row>
                       <v-col>
                         <div class="text-center">
-                          <StopStream v-if="streamerRole" />
+                          <div v-if="streamerRole" >
+                          <StopStream />
+                            <v-btn class="mx-2" fab>
+                              <v-icon dark>
+                                mdi-camera
+                              </v-icon>
+                            </v-btn>
+                            <v-btn class="mx-2" fab>
+                              <v-icon dark>
+                                mdi-microphone
+                              </v-icon>
+                            </v-btn>
+                          </div>
                           <AddFavouriteStreamer v-else />
                         <!-- <v-btn
                           v-if="role !== 'streamer'"
