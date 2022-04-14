@@ -62,12 +62,23 @@ export default {
   },
 
   auth: {
+    redirect: {
+      login: '/login',
+      logout: '/',
+      callback: '/',
+      home: '/home'
+    },
+    watchLoggedIn: true,
     strategies: {
       local: {
         endpoints: {
           login: { url: '/auth/login', method: 'post', propertyName: 'token' },
           logout: { url: '/auth/logout', method: 'post' },
-          user: { url: '/users/me', method: 'get' }
+          user: { url: '/users/me', method: 'get', propertyName: false }
+        },
+        user: {
+          autoFetch: true,
+          property: ''
         },
         tokenType: ''
       }
