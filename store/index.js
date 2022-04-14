@@ -10,8 +10,8 @@ export const state = () => ({
 })
 
 export const mutations = {
-  saveUser (state, user) {
-    state.saveCurrentUser = user
+  saveCurrentUser (state, user) {
+    state.user = user
     this.$auth.setUser(state.user)
   },
   stepChanger (state, step) {
