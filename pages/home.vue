@@ -3,7 +3,7 @@
     <NavBar />
     <NavigationDrawer />
     <GenreSelect />
-    <!-- <GenreAlert v-if="$store.state.genreAlert" /> -->
+    <GenreAlert v-if="$store.state.genreAlert" />
     <CreateStreamButton />
     <LiveStreams />
     <TopFive />
@@ -15,7 +15,7 @@
 import NavBar from '@/components/NavBar.vue'
 import NavigationDrawer from '@/components/NavigationDrawer.vue'
 import GenreSelect from '@/components/GenreSelect.vue'
-// import GenreAlert from '@/components/GenreAlert.vue'
+import GenreAlert from '@/components/GenreAlert.vue'
 import CreateStreamButton from '@/components/CreateStreamButton.vue'
 import LiveStreams from '@/components/LiveStreams.vue'
 import TopFive from '@/components/TopFive.vue'
@@ -27,7 +27,7 @@ export default {
     NavBar,
     NavigationDrawer,
     GenreSelect,
-    // GenreAlert,
+    GenreAlert,
     CreateStreamButton,
     LiveStreams,
     TopFive,
