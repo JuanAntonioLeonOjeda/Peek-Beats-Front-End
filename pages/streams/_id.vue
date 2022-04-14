@@ -1,9 +1,8 @@
 <template>
   <div id="mainFrame">
-    Your stream room is: {{ roomId }}
     <video id="localVideo" ref="localVideo" autoplay muted>LocalVideo</video>
     <video id="remoteVideo" ref="remoteVideo" autoplay>RemoteVideo</video>
-    <div v-if="role === 'streamer'" class="bottom-bar d-flex justify-center">
+    <div class="bottom-bar d-flex justify-center">
       <v-btn class="mx-2" fab @click="offCamera()">
         <v-icon dark>
           mdi-camera
@@ -14,15 +13,15 @@
           mdi-microphone
         </v-icon>
       </v-btn>
+      <StopStream v-if="streamerRole" />
+      <AddFavouriteStreamer v-else />
     </div>
-    <!-- <StreamVideo /> -->
-
-    <StopStream v-if="role === 'streamer'" />
   </div>
 </template>
 
 <script>
-
+import StopStream from '@/components/StopStream.vue'
+import AddFavouriteStreamer from '@/components/AddFavouriteStreamer.vue'
 const servers = {
   configuration: {
     offerToReceiveAudio: true,
@@ -33,81 +32,68 @@ const servers = {
     { urls: 'stun:stun1.l.google.com:19302' }
   ]
 }
-
 const RPC = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection
 const localPC = new RPC(servers)
-
 export default {
-  name: 'StreamPage',
+  components: {
+    StopStream,
+    AddFavouriteStreamer
+  },
   data () {
     return {
-      roomId: this.$route.params.id,
-      role: this.$store.state.role
+      room: this.$route.params.id,
+      streamerRole: this.$store.state.streamer
     }
   },
   async beforeMount () {
     const lastId = localStorage.getItem('lastId')
-    console.log('lastId: ' + lastId)
     if (lastId) {
-      await this.$socket.emit('leave', this.roomId)
+      await this.$socket.emit('leave', this.room)
     }
     await this.$socket.emit('join', lastId)
-    localStorage.setItem('lastId', this.roomId)
+    localStorage.setItem('lastId', this.room)
   },
   async mounted () {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true })
-
     this.$refs.localVideo.srcObject = stream
-    this.$store.commit('setCamera', {
+    this.$store.commit('setting/setCamera', {
       camera: stream
     })
-
     stream.getTracks().forEach((track) => {
       localPC.addTrack(track, stream)
     })
-
     const offer = await localPC.createOffer()
     await localPC.setLocalDescription(offer)
-    console.log('offer: ' + offer)
-    console.log('localPC: ' + localPC)
-    await this.$socket.emit('message', {
-      room: this.roomId,
+    await this.$socket.emit('message', JSON.stringify({
+      room: this.room,
       data: localPC.localDescription
-    })
-    console.log('message emitted')
+    }))
     localPC.onicecandidate = async (event) => {
-      console.log('event onicecandidate: ' + event)
       if (event.candidate) {
-        console.log('enent.candidate = true => ' + event.candidate)
-        await this.$socket.emit('message', {
-          room: this.roomId,
+        await this.$socket.emit('message', JSON.stringify({
+          room: this.room,
           data: event.candidate
-        })
+        }))
       } else {
         // eslint-disable-next-line
         console.log('allhasbeensent')
       }
     }
     localPC.ontrack = (event) => {
-      console.log('ontrack event:' + event)
-      console.log(event.streams)
       if (event.streams[0]) {
-        console.log(event.streams[0])
         this.$refs.remoteVideo.srcObject = event.streams[0]
       }
     }
     this.$socket.on('message', async (data) => {
       if (data.type === 'offer') {
-        console.log('offer: ' + offer)
         await localPC.setRemoteDescription(new RTCSessionDescription(data))
         const answer = await localPC.createAnswer()
         await localPC.setLocalDescription(answer)
-        await this.$socket.emit('message', {
-          room: this.roomId,
+        await this.$socket.emit('message', JSON.stringify({
+          room: this.room,
           data: localPC.localDescription
-        })
+        }))
       } else if (data.type === 'answer') {
-        console.log('answer:' + data)
         await localPC.setRemoteDescription(new RTCSessionDescription(data))
       } else {
         await localPC.addIceCandidate(new RTCIceCandidate(data))
@@ -115,11 +101,11 @@ export default {
     })
   },
   async beforeDestroy () {
-    await this.$socket.emit('leave', this.roomId)
+    await this.$socket.emit('leave', this.room)
   },
   methods: {
     offCamera () {
-      this.$store.state.camera.getVideoTracks().forEach((track) => {
+      this.$store.state.setting.camera.getVideoTracks().forEach((track) => {
         track.enabled = !track.enabled
       })
     }
@@ -127,8 +113,8 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
- #mainFrame {
+<style lang="scss">
+  #mainFrame {
     #localVideo {
       z-index: 100;
       position: absolute;

@@ -11,7 +11,7 @@
         <div v-else-if="liveStreams.length !== 0">
           Current Streams: {{ liveStreams.length }}
           <carousel-3d :autoplay="true" :autoplay-timeout="5000" :clickable="true" :display="5">
-            <slide v-for="(stream, idx) in liveStreams" :key="idx" :index="idx">
+            <slide v-for="(stream, idx) in liveStreams" :key="idx" :index="idx" :style="`background-image:url(${stream.genre.image})`">
               <span class="title">Author: {{ stream.streamer.userName }}</span>
               <p>Genre: {{ stream.genre.name }}</p>
               <p>Current Viewers: {{ stream.currentViewers.length }}</p>
@@ -51,6 +51,7 @@ export default {
   async mounted () {
     try {
       const stream = await this.$store.dispatch('liveStreams')
+      console.log(stream)
       this.liveStreams = stream
       this.loading = false
     } catch (error) {
