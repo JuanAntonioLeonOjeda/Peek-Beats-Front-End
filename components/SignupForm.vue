@@ -317,12 +317,6 @@ export default {
 </script>
 
 <style scoped>
-.alreadyOn {
-  z-index: 1;
-  background-image: url("../static/cassette-blur.jpg");
-  background-size: cover;
-  background-position: center;
-}
 .text-danger {
   display: none;
 }
