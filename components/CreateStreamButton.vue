@@ -66,6 +66,7 @@ export default {
       await this.$store.dispatch('createStream', genreId[0]._id)
       const roomId = uuidv4()
       const stream = await this.$store.dispatch('assignStreamRoom', roomId)
+      console.log(stream);
       this.$store.commit('getStreamInfo', stream)
       this.$store.commit('changeRole')
       this.$router.push({
