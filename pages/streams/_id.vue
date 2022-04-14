@@ -45,12 +45,12 @@
                   <v-icon class="mr-3">
                     mdi-account-group
                   </v-icon>
-                  <span v-if="stream.currentViewers !== []">
+                  <!-- <span v-if="stream.currentViewers !== []">
                     {{ getTotalViewers }}
                   </span>
                   <span v-else>
                     0
-                  </span>
+                  </span> -->
                 </v-card-title>
 
                 <div v-if="streamerRole">
