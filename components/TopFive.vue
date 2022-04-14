@@ -19,7 +19,7 @@
               <v-spacer />
               <v-col cols="3">
                 <div class="avatar-container" position="absolute">
-                  <img src="../static/peek-beats-logo.JPG" alt="Avatar">
+                  <!-- <img src="../static/peek-beats-logo.JPG" alt="Avatar"> -->
                 </div>
               </v-col>
               <v-spacer />
@@ -65,9 +65,9 @@ export default {
 .text-center {
   margin-top: 50px;
 }
-img {
-  border-radius: 50%;
-}
+// img {
+//   border-radius: 50%;
+// }
 .avatar-container {
   height: 50px;
   width: 60px;
