@@ -1,6 +1,5 @@
 <template>
-  <div>
-    <v-container class="mt-0 pt-0 mb-10">
+  <v-container class="mt-0 pt-0 mb-10">
     <v-row class="mb-10">
       <v-col
         cols="12"
@@ -23,69 +22,28 @@
       </v-col>
     </v-row>
   </v-container>
-    <!-- <v-container fluid>
-      <v-row align="center">
-        <v-col
-          class="d-flex"
-          cols="12"
-          sm="6"
-        >
-          <v-select
-            v-model="genre"
-            :items="genres"
-            label="Tags"
-            chips
-          >
-            <template #selection="{ item }">
-              {{ item.name }}
-            </template>
-            <template #item="{ item, attrs, on }">
-              <v-list-item v-bind="attrs" v-on="on">
-                <v-list-item-content>
-                  <v-list-item-title>
-                    <span>{{ item.name }}</span>
-                  </v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-            </template>
-          </v-select>
-          {{ genre.id }}
-        </v-col>
-      </v-row>
-    </v-container> -->
-  </div>
 </template>
 
 <script>
 const { v4: uuidv4 } = require('uuid')
 export default {
   name: 'CreateStreamButton',
-  data () {
-    return {
-      genres: [],
-      genre: ''
-    }
-  },
-  async mounted () {
-    try {
-      const genre = await this.$store.dispatch('getAllGenres')
-      this.genres = genre
-    } catch (error) {
-      throw new Error(error)
-    }
-  },
   methods: {
     async startStream () {
-      const genreId = this.genres.filter(e => e.name === this.genre)
-      await this.$store.dispatch('createStream', genreId[0]._id)
-      const roomId = uuidv4()
-      const stream = await this.$store.dispatch('assignStreamRoom', roomId)
-      console.log('stream: ' + stream);
-      this.$store.commit('getStreamInfo', stream.stream)
-      this.$store.commit('changeRole')
-      this.$router.push({
-        path: `/streams/${roomId}`
-      })
+      if (this.$store.state.genreId) {
+        const genreId = this.$store.state.genreId
+        await this.$store.dispatch('createStream', genreId)
+        const roomId = uuidv4()
+        const stream = await this.$store.dispatch('assignStreamRoom', roomId)
+        await this.$store.commit('getStreamInfo', stream.stream)
+        await this.$store.commit('changeRole')
+        await this.$store.commit('saveGenre', '')
+        this.$router.push({
+          path: `/streams/${roomId}`
+        })
+      } else {
+        await this.$store.commit('genreAlert', true)
+      }
     }
   }
 }
@@ -93,5 +51,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+  div {
+    margin-top: 5px;
+  }
 </style>
