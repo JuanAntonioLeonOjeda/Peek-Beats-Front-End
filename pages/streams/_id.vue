@@ -1,5 +1,5 @@
 <template>
-  <div id="mainFrame">
+  <!-- <div id="mainFrame">
     <div v-if="streamerRole">
       <video class="bigCinema" ref="localVideo" autoplay muted>LocalVideo</video>
       <video class="remoteVideo" ref="remoteVideo" autoplay>RemoteVideo</video>
@@ -22,6 +22,81 @@
       <StopStream v-if="streamerRole" />
       <AddFavouriteStreamer v-else />
     </div>
+  </div> -->
+  <div>
+    <NavBar />
+    <NavigationDrawer />
+    <v-container position="relative">
+      <v-row>
+        <v-col
+          cols="12"
+          md="12"
+          lg="12"
+        >
+          <div class="text-center">
+            <div id="mainFrame">
+              <v-card>
+                <div v-if="streamerRole">
+                  Your stream room is: {{ roomId }}
+                </div>
+                <v-card-title>
+                  Welcome: {{ userName }}
+                  <v-spacer />
+                  <v-icon class="mr-3">
+                    mdi-account-group
+                  </v-icon>
+                  <span v-if="stream.currentViewers !== []">
+                    {{ getTotalViewers }}
+                  </span>
+                  <span v-else>
+                    0
+                  </span>
+                </v-card-title>
+
+                <div v-if="streamerRole">
+                  <video class="bigCinema" ref="localVideo" autoplay muted>LocalVideo</video>
+                  <video class="remoteVideo" ref="remoteVideo" autoplay>RemoteVideo</video>
+                </div>
+                <div v-else>
+                  <video class="bigCinema" ref="remoteVideo" autoplay>RemoteVideo</video>
+                  <video class="remoteVideo" ref="localVideo" autoplay muted>LocalVideo</video>
+                </div>
+
+                <v-card-subtitle class="pa-0 mt-5">
+                  Music genre: {{ genre.name }}
+                </v-card-subtitle>
+                <v-card-subtitle class="pa-0">
+                  <v-btn v-if="streamerRole" icon @click="editDescription">
+                    <v-icon>mdi-square-edit-outline</v-icon>
+                  </v-btn>
+                  {{ stream.description }}
+                </v-card-subtitle>
+
+                <v-card-actions>
+                  <v-container>
+                    <v-row>
+                      <v-col>
+                        <div class="text-center">
+                          <StopStream v-if="streamerRole" />
+                          <AddFavouriteStreamer v-else />
+                        <!-- <v-btn
+                          v-if="role !== 'streamer'"
+                          icon
+                          :@click="like = !like"
+                        >
+                        <v-icon color="red">{{ like ? 'mdi-cards-heart' : 'mdi-cards-heart-outline' }}</v-icon>
+                        </v-btn> -->
+                        </div>
+                      </v-col>
+                    </v-row>
+                  </v-container>
+                </v-card-actions>
+              </v-card>
+            </div>
+          </div>
+        </v-col>
+      </v-row>
+    </v-container>
   </div>
 </template>
 
@@ -130,12 +205,30 @@ export default {
     //   height: 150px;
     //   width: 200px;
     // }
+  //   .bigCinema {
+  //     z-index: 50;
+  //     height: calc(100vh - 64px);
+  //     width: 100vw;
+  //     background-color: #7f828b;
+  //   }
+  //   .bottom-bar {
+  //     position: absolute;
+  //     bottom: 25px;
+  //     width: 100vw;
+  //     text-align: center;
+  //   }
+  // }
+  #mainFrame {
+  width: 95%;
+  position: absolute;
+  left: 40px;
     .bigCinema {
       z-index: 50;
-      height: calc(100vh - 64px);
-      width: 100vw;
-      background-color: #7f828b;
+      height: calc(70vh - 90px);
+      width: 100%;
+      background-color: #7f828b  31;
     }
+
     .bottom-bar {
       position: absolute;
       bottom: 25px;
