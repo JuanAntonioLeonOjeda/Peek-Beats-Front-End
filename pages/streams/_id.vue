@@ -195,7 +195,7 @@ export default {
 </script>
 
 <style lang="scss">
-  #mainFrame {
+  // #mainFrame {
     // #localVideo {
     //   z-index: 100;
     //   position: absolute;
