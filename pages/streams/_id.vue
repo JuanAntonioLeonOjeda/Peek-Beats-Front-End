@@ -44,8 +44,7 @@
                   Welcome: {{ $auth.user.userName }}
                   </div>
                   <div v-else>
-                  <!-- You are watching: {{ stream.streamer.userName }} -->
-                  Welcome: {{ $auth.user.userName }}
+                  You are watching: {{ stream.streamer.userName }}
                   </div>
                   <v-spacer />
                   <v-icon class="mr-3">
