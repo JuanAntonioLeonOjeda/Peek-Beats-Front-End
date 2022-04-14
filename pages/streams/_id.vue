@@ -66,10 +66,17 @@ export default {
       this.$store.commit('setting/setCamera', {
         camera: stream
       })
+      stream.getTracks().forEach((track) => {
+        localPC.addTrack(track, stream)
+      })
     }
-    stream.getTracks().forEach((track) => {
-      localPC.addTrack(track, stream)
-    })
+    else {
+      const stream = {}
+      stream.getTracks().forEach((track) => {
+        localPC.addTrack(track, stream)
+      })
+    }
+
     const offer = await localPC.createOffer()
     await localPC.setLocalDescription(offer)
     await this.$socket.emit('message', JSON.stringify({
