@@ -1,9 +1,29 @@
 <template>
   <div>
-    <v-btn color="secondary" @click="startStream">
-      Start Stream
-    </v-btn>
-    <v-container fluid>
+    <v-container class="mt-0 pt-0 mb-10">
+    <v-row class="mb-10">
+      <v-col
+        cols="12"
+        md="8"
+        offset-md="2"
+        xs="12"
+        class="mt-0 pt-0"
+      >
+        <div class="text-center">
+          <v-btn
+            color="primary"
+            x-large
+            block
+            class="mt-20"
+            @click="startStream"
+          >
+            Start Stream
+          </v-btn>
+        </div>
+      </v-col>
+    </v-row>
+  </v-container>
+    <!-- <v-container fluid>
       <v-row align="center">
         <v-col
           class="d-flex"
@@ -11,12 +31,6 @@
           sm="6"
         >
           <v-select
-            v-model="genre"
-            :items="genres"
-            label="Standard"
-            item-text="name"
-          />
-          <!-- <v-select
             v-model="genre"
             :items="genres"
             label="Tags"
@@ -35,10 +49,10 @@
               </v-list-item>
             </template>
           </v-select>
-          {{ genre.id }} -->
+          {{ genre.id }}
         </v-col>
       </v-row>
-    </v-container>
+    </v-container> -->
   </div>
 </template>
 

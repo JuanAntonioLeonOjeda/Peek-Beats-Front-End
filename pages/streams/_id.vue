@@ -1,12 +1,12 @@
 <template>
   <div id="mainFrame">
     <div v-if="streamerRole">
-      <video id="bigCinema" ref="localVideo" autoplay muted>LocalVideo</video>
-      <!-- <video id="remoteVideo" ref="remoteVideo" autoplay>RemoteVideo</video> -->
+      <video class="bigCinema" ref="localVideo" autoplay muted>LocalVideo</video>
+      <video class="remoteVideo" ref="remoteVideo" autoplay>RemoteVideo</video>
     </div>
     <div v-else>
-      <!-- <video id="bigCinema" ref="localVideo" autoplay muted>LocalVideo</video> -->
-      <video video id="bigCinema" ref="remoteVideo" autoplay>RemoteVideo</video>
+      <video class="bigCinema" ref="remoteVideo" autoplay>RemoteVideo</video>
+      <video class="remoteVideo" ref="localVideo" autoplay muted>LocalVideo</video>
     </div>
     <div class="bottom-bar d-flex justify-center">
       <v-btn class="mx-2" fab @click="offCamera()">
@@ -60,17 +60,14 @@ export default {
     localStorage.setItem('lastId', this.room)
   },
   async mounted () {
-    if (this.streamerRole) {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true })
-      this.$refs.localVideo.srcObject = stream
-      this.$store.commit('setting/setCamera', {
-        camera: stream
-      })
-      stream.getTracks().forEach((track) => {
-        localPC.addTrack(track, stream)
-      })
-    }
-
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true })
+    this.$refs.localVideo.srcObject = stream
+    this.$store.commit('setting/setCamera', {
+      camera: stream
+    })
+    stream.getTracks().forEach((track) => {
+      localPC.addTrack(track, stream)
+    })
     const offer = await localPC.createOffer()
     await localPC.setLocalDescription(offer)
     await this.$socket.emit('message', JSON.stringify({
@@ -133,7 +130,7 @@ export default {
     //   height: 150px;
     //   width: 200px;
     // }
-    #bigCinema {
+    .bigCinema {
       z-index: 50;
       height: calc(100vh - 64px);
       width: 100vw;
@@ -145,5 +142,8 @@ export default {
       width: 100vw;
       text-align: center;
     }
+  }
+  .remoteVideo { 
+    display: none;
   }
 </style>
