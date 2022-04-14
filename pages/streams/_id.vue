@@ -37,10 +37,10 @@
             <div id="mainFrame">
               <v-card>
                 <div v-if="streamerRole">
-                  Your stream room is: {{ roomId }}
+                  Your stream room is: {{ room }}
                 </div>
                 <v-card-title>
-                  Welcome: {{ userName }}
+                  Welcome: {{ $auth.user.userName }}
                   <v-spacer />
                   <v-icon class="mr-3">
                     mdi-account-group
@@ -103,6 +103,8 @@
 <script>
 import StopStream from '@/components/StopStream.vue'
 import AddFavouriteStreamer from '@/components/AddFavouriteStreamer.vue'
+import NavigationDrawer from '@/components/NavigationDrawer.vue'
+
 const servers = {
   configuration: {
     offerToReceiveAudio: true,
@@ -118,7 +120,8 @@ const localPC = new RPC(servers)
 export default {
   components: {
     StopStream,
-    AddFavouriteStreamer
+    AddFavouriteStreamer,
+    NavigationDrawer
   },
   data () {
     return {
