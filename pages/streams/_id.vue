@@ -60,7 +60,7 @@ export default {
     localStorage.setItem('lastId', this.room)
   },
   async mounted () {
-    if (streamerRole) {
+    if (this.streamerRole) {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true })
       this.$refs.localVideo.srcObject = stream
       this.$store.commit('setting/setCamera', {
