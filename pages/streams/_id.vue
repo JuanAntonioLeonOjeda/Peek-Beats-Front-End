@@ -40,7 +40,12 @@
                   Your stream room is: {{ room }}
                 </div>
                 <v-card-title>
+                  <div v-if="streamerRole">
                   Welcome: {{ $auth.user.userName }}
+                  </div>
+                  <div v-else>
+                  You are watching: {{ stream.streamer.userName }}
+                  </div>
                   <v-spacer />
                   <v-icon class="mr-3">
                     mdi-account-group
