@@ -50,25 +50,25 @@
                   <v-icon class="mr-3">
                     mdi-account-group
                   </v-icon>
-                  <!-- <span v-if="stream.currentViewers !== []">
+                  <span v-if="stream.currentViewers !== []">
                     {{ getTotalViewers }}
                   </span>
                   <span v-else>
                     0
-                  </span> -->
+                  </span>
                 </v-card-title>
 
                 <div v-if="streamerRole">
-                  <video class="bigCinema" ref="localVideo" autoplay muted>LocalVideo</video>
-                  <video class="remoteVideo" ref="remoteVideo" autoplay>RemoteVideo</video>
+                  <video class="bigCinema" ref="localVideo" autoplay>LocalVideo</video>
+                  <video class="remoteVideo" ref="remoteVideo" autoplay muted>RemoteVideo</video>
                 </div>
                 <div v-else>
-                  <video class="bigCinema" ref="remoteVideo" autoplay>RemoteVideo</video>
+                  <video class="bigCinema" ref="remoteVideo" autoplay muted>RemoteVideo</video>
                   <video class="remoteVideo" ref="localVideo" autoplay muted>LocalVideo</video>
                 </div>
 
                 <v-card-subtitle class="pa-0 mt-5">
-                  Music genre: {{ genre.name }}
+                  Music genre: {{ stream.genre.name }}
                 </v-card-subtitle>
                 <v-card-subtitle class="pa-0">
                   <v-btn v-if="streamerRole" icon @click="editDescription">
@@ -225,29 +225,6 @@ export default {
 </script>
 
 <style lang="scss">
-  // #mainFrame {
-    // #localVideo {
-    //   z-index: 100;
-    //   position: absolute;
-    //   right: 25px;
-    //   bottom: 25px;
-    //   background-color: #47494e;
-    //   height: 150px;
-    //   width: 200px;
-    // }
-  //   .bigCinema {
-  //     z-index: 50;
-  //     height: calc(100vh - 64px);
-  //     width: 100vw;
-  //     background-color: #7f828b;
-  //   }
-  //   .bottom-bar {
-  //     position: absolute;
-  //     bottom: 25px;
-  //     width: 100vw;
-  //     text-align: center;
-  //   }
-  // }
   #mainFrame {
   width: 95%;
   position: absolute;
