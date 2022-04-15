@@ -3,17 +3,33 @@
     <v-btn color="#565EE8" @click="AddFavouriteStreamer">
       Add Favourite Streamer
     </v-btn>
+    <FavouriteStreamerAlert v-if="show" :message="message" />
   </div>
 </template>
 
 <script>
+import FavouriteStreamerAlert from '@/components/FavouriteStreamerAlert.vue'
 export default {
   name: 'AddFavouriteStreamer',
+  components: {
+    FavouriteStreamerAlert
+  },
+  data () {
+    return {
+      show: false,
+      message: ''
+    }
+  },
   methods: {
     async AddFavouriteStreamer () {
       const streamerId = this.$store.state.streamInfo.streamer._id
       const result = await this.$store.dispatch('addFavouriteStreamer', streamerId)
-      alert(result)
+      this.message = result
+      this.show = true
+      const timerId = setTimeout(() => {
+        this.show = false
+        clearTimeout(timerId)
+      }, 3000)
     }
   }
 }
