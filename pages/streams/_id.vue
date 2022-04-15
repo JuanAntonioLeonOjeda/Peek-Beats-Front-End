@@ -59,16 +59,21 @@
                 </v-card-title>
 
                 <div v-if="streamerRole">
-                  <video class="bigCinema" ref="localVideo" autoplay>LocalVideo</video>
+                  <video class="bigCinema" ref="localVideo" autoplay muted>LocalVideo</video>
                   <video class="remoteVideo" ref="remoteVideo" autoplay muted>RemoteVideo</video>
                 </div>
                 <div v-else>
-                  <video class="bigCinema" ref="remoteVideo" autoplay muted>RemoteVideo</video>
+                  <video class="bigCinema" ref="remoteVideo" autoplay>RemoteVideo</video>
                   <video class="remoteVideo" ref="localVideo" autoplay muted>LocalVideo</video>
                 </div>
 
                 <v-card-subtitle class="pa-0 mt-5">
-                  Music genre: {{ stream.genre.name }}
+                  <div v-if="streamerRole">
+                    Music genre: {{ genre }}
+                  </div>
+                  <div v-else>
+                    Music genre: {{ stream.genre.name }}
+                  </div>
                 </v-card-subtitle>
                 <v-card-subtitle class="pa-0">
                   <v-btn v-if="streamerRole" icon @click="editDescription">
@@ -84,7 +89,7 @@
                         <div class="text-center">
                           <div v-if="streamerRole" >
                           <StopStream />
-                          <v-spacer /> 
+                          <v-spacer />
                             <v-btn class="mx-2" fab>
                               <v-icon dark>
                                 mdi-camera
@@ -147,7 +152,6 @@ export default {
       streamerRole: this.$store.state.streamer,
       userName: '',
       stream: this.$store.state.streamInfo,
-      genre: '',
       like: false
     }
   },
@@ -243,7 +247,7 @@ export default {
       text-align: center;
     }
   }
-  .remoteVideo { 
+  .remoteVideo {
     display: none;
   }
 </style>

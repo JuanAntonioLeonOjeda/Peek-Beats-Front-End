@@ -66,7 +66,7 @@ export default {
     const genreId = this.genres.filter(e => e.name === this.genre)
     if (genreId[0]) {
       await this.$store.commit('genreAlert', false)
-      await this.$store.commit('saveGenre', genreId[0]._id)
+      await this.$store.commit('saveGenre', genreId[0])
     }
   }
 }

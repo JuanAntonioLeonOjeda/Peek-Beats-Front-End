@@ -6,7 +6,9 @@ export const state = () => ({
   streamInfo: {},
   stepChange: 1,
   genreId: '',
-  searchGenres: []
+  genreName: '',
+  searchGenres: [],
+  genreAlert: false
 })
 
 export const mutations = {
@@ -30,10 +32,14 @@ export const mutations = {
     state.streamInfo = info
   },
   saveGenre (state, genre) {
-    state.genreId = genre
+    state.genreId = genre._id
+    state.genreName = genre.name
   },
   searchValues (state, model) {
     state.searchGenres = model
+  },
+  genreAlert (state, bool) {
+    state.genreAlert = bool
   }
 }
 
@@ -44,7 +50,9 @@ export const actions = {
   },
   async liveStreams () {
     try {
+      console.log('service call')
       const streamStore = await this.$axios.get('/streams/live')
+      console.log('back returns: ' + streamStore.data)
       return streamStore.data
     } catch (error) {
       throw new Error(error)
@@ -86,7 +94,6 @@ export const actions = {
   },
   async getTopFive () {
     const top5 = await this.$axios.get('/users/top')
-    console.log(top5)
     return top5.data
   },
   async addFavouriteStreamer (state, streamerId) {
