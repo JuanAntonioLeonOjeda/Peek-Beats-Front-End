@@ -16,7 +16,7 @@
           <v-avatar size="150">
             <v-img
               alt="user"
-              src="https://images.pexels.com/photos/4566232/pexels-photo-4566232.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+              :src="`${avatar}`"
             />
           </v-avatar>
           <h1>
@@ -110,6 +110,7 @@ export default {
     const user = await this.$store.dispatch('getUserName')
     this.userName = user.userName
     this.userEmail = user.email
+    this.avatar = user.avatar
     const genre = await this.$store.dispatch('getAllGenres')
     this.genres = genre
   }

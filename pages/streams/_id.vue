@@ -152,7 +152,8 @@ export default {
       streamerRole: this.$store.state.streamer,
       userName: '',
       stream: this.$store.state.streamInfo,
-      like: false
+      like: false,
+      genre: this.$store.state.genreName
     }
   },
   computed: {
