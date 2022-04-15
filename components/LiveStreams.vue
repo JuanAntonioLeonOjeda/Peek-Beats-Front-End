@@ -10,24 +10,34 @@
         </div>
         <div v-else-if="liveStreams.length !== 0">
           Current Streams: {{ liveStreams.length }}
-          <carousel-3d :autoplay="true" :autoplay-timeout="5000" :clickable="true" :display="5">
-            <slide v-for="(stream, idx) in liveStreams" :key="idx" :index="idx" :style="`background-image:url(${stream.genre.image})`">
-              <span class="title">Author: </span>
-              {{ stream.streamer.userName }}
-              <p>Genre: {{ stream.genre.name }}</p>
-              <p>Current Viewers: {{ stream.currentViewers.length }}</p>
-              <p>Likes: {{ stream.likes.length }}</p>
-              <p>{{ stream.description }}</p>
-              <v-btn
-                class="ml-2 mt-5"
-                outlined
-                rounded
-                small
-                @click="joinStream(stream._id)"
-              >
-                <v-icon>mdi-play</v-icon>
-                WATCH STREAM
-              </v-btn>
+          <carousel-3d :autoplay="true" :autoplay-timeout="5000" :clickable="true" :display="5" :height="200">
+            <slide v-for="(stream, idx) in liveStreams" :key="idx" :index="idx" :style="`background-image:url(${stream.genre.image}); border-radius: 25px;border-color: #565EE8; border-style: solid;border-width: 5px !important;`">
+              <span class="slideText title">{{ stream.streamer.userName }}</span>
+              <div class="avatar-container" position="absolute">
+                <v-list-item-avatar size="67">
+                  <v-img :src="`${stream.streamer.avatar}`" alt="Avatar Image" />
+                </v-list-item-avatar>
+              </div>
+              <p class="slideText genre-text">{{ stream.genre.name }}</p>
+              <p class="slideText"><v-icon class="slideText">mdi-account-group</v-icon>  {{ stream.currentViewers.length }}</p>
+              <p class="slideText mb-0"><v-icon class="slideText">mdi-heart</v-icon>{{ stream.likes.length }}</p>
+              <v-container>
+                <v-row>
+                  <v-col class="pt-1">
+                    <div class="text-center slideText">
+                      <v-btn
+                        outlined
+                        rounded
+                        small
+                        color="black"
+                        @click="joinStream(stream._id)"
+                      >
+                        <v-icon color="white">mdi-play</v-icon>
+                      </v-btn>
+                    </div>
+                  </v-col>
+                </v-row>
+              </v-container>
             </slide>
           </carousel-3d>
         </div>
@@ -80,6 +90,26 @@ export default {
 
     .title { font-size: 22px; }
   }
+}
+.avatar {
+  position: absolute;
+  right: 25px;
+}
+.genre-text {
+  color: rgb(59, 59, 59)
+}
+.title {
+  font-size: 40px
+}
+.slideText {
+  -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-color: black;
+}
+.avatar-container {
+  top: 0;
+  right: 100;
+  display: inline-block;
+  float: right;
 }
 </style>
 
