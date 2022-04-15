@@ -11,7 +11,7 @@ export default {
   name: 'AddFavouriteStreamer',
   methods: {
     async AddFavouriteStreamer () {
-      const streamerId = this.$store.state.streamInfo.streamer
+      const streamerId = this.$store.state.streamInfo.streamer._id
       const result = await this.$store.dispatch('addFavouriteStreamer', streamerId)
       alert(result)
     }
