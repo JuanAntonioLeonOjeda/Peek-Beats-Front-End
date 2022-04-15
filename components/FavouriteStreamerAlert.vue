@@ -1,5 +1,5 @@
 <template>
-  <v-alert border="bottom" color="primary" dark>
+  <v-alert class="mt-10" border="bottom" color="primary" dark>
     {{ message }}
   </v-alert>
 </template>
