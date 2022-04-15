@@ -9,7 +9,6 @@
           <LoadingAnimation />
         </div>
         <div v-else-if="liveStreams.length !== 0">
-          Current Streams: {{ liveStreams.length }}
           <carousel-3d :autoplay="true" :autoplay-timeout="5000" :clickable="true" :display="5" :height="200">
             <slide v-for="(stream, idx) in liveStreams" :key="idx" :index="idx" :style="`background-image:url(${stream.genre.image}); border-radius: 25px;border-color: #565EE8; border-style: solid;border-width: 5px !important;`">
               <span class="slideText title">{{ stream.streamer.userName }}</span>
