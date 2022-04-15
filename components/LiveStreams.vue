@@ -25,10 +25,9 @@
                   <v-col class="pt-1">
                     <div class="text-center slideText">
                       <v-btn
-                        outlined
                         rounded
                         small
-                        color="black"
+                        color="primary"
                         @click="joinStream(stream._id)"
                       >
                         <v-icon color="white">mdi-play</v-icon>
@@ -101,6 +100,8 @@ export default {
   font-size: 40px
 }
 .slideText {
+  color: white;
+  font-size: 16px;;
   -webkit-text-stroke-width: 1px;
   -webkit-text-stroke-color: black;
 }

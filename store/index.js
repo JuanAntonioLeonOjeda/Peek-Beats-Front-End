@@ -50,9 +50,7 @@ export const actions = {
   },
   async liveStreams () {
     try {
-      console.log('service call')
       const streamStore = await this.$axios.get('/streams/live')
-      console.log('back returns: ' + streamStore.data)
       return streamStore.data
     } catch (error) {
       throw new Error(error)
