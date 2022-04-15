@@ -7,8 +7,9 @@
         :mini-variant="$vuetify.breakpoint.smOnly || $vuetify.breakpoint.xsOnly"
         mini-variant-width="73"
         mobile-breakpoint="600"
-        color="bar"
+        color="#565de850"
       >
+        <!-- v-navigation-drawer antes tenía: color="bar" -->
         <v-list>
           <v-list-item link @click="$router.push({ path: '/profile' })">
             <v-list-item-avatar
