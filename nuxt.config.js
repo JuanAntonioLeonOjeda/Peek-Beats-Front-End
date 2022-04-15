@@ -58,7 +58,8 @@ export default {
   ** See https://axios.nuxtjs.org/options
   */
   axios: {
-    baseURL: 'https://peek-beats.herokuapp.com/api'
+    baseURL: 'http://localhost:5000/api'
+    // baseURL: 'https://peek-beats.herokuapp.com/api'
   },
 
   auth: {

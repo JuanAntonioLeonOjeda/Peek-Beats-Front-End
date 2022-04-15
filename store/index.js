@@ -57,9 +57,8 @@ export const actions = {
     }
   },
   async createStream (state, id) {
-    const stream = await this.$axios.post('/streams/me', {
-      genre: id
-    })
+    console.log(id)
+    const stream = await this.$axios.post('/streams/me', { genre: id })
     return stream.data
   },
   async getAllGenres () {
@@ -97,5 +96,14 @@ export const actions = {
   async addFavouriteStreamer (state, streamerId) {
     const streamer = await this.$axios.post(`/users/me/favoriteStreamers/${streamerId}`)
     return streamer.data
+  },
+  async receiveStream (state, payload) {
+    const stream = await this.$axios.post('/streams/receive', payload)
+    return stream.data
+  },
+  async broadcast (state, payload) {
+    const stream = await this.$axios.post('/streams/broadcast', payload)
+    console.log('voilá')
+    return stream.data
   }
 }

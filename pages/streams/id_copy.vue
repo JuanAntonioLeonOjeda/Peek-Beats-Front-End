@@ -58,8 +58,13 @@
                   </span>
                 </v-card-title>
 
-                <div>
-                  <video id="video" class="bigCinema" autoplay>LocalVideo</video>
+                <div v-if="streamerRole">
+                  <video class="bigCinema" ref="localVideo" autoplay muted>LocalVideo</video>
+                  <video class="remoteVideo" ref="remoteVideo" autoplay muted>RemoteVideo</video>
+                </div>
+                <div v-else>
+                  <video class="bigCinema" ref="remoteVideo" autoplay>RemoteVideo</video>
+                  <video class="remoteVideo" ref="localVideo" autoplay muted>LocalVideo</video>
                 </div>
 
                 <v-card-subtitle class="pa-0 mt-5">
@@ -123,19 +128,18 @@ import StopStream from '@/components/StopStream.vue'
 import AddFavouriteStreamer from '@/components/AddFavouriteStreamer.vue'
 import NavigationDrawer from '@/components/NavigationDrawer.vue'
 
-// const servers = {
-//   configuration: {
-//     offerToReceiveAudio: true,
-//     offerToReceiveVideo: true
-//   },
-//   iceServers: [
-//     { urls: 'stun:stun.l.google.com:19302' },
-//     { urls: 'stun:stun1.l.google.com:19302' }
-//   ]
-// }
-// const RPC = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection
-// const localPC = new RPC(servers)
-
+const servers = {
+  configuration: {
+    offerToReceiveAudio: true,
+    offerToReceiveVideo: true
+  },
+  iceServers: [
+    { urls: 'stun:stun.l.google.com:19302' },
+    { urls: 'stun:stun1.l.google.com:19302' }
+  ]
+}
+const RPC = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection
+const localPC = new RPC(servers)
 export default {
   components: {
     StopStream,
@@ -166,119 +170,55 @@ export default {
     localStorage.setItem('lastId', this.room)
   },
   async mounted () {
-    if (this.streamerRole) {
-      const store = this.$store
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true })
-      document.getElementById('video').srcObject = stream
-
-      const peer = createStreamerPeer(store)
-
-      stream.getTracks().forEach((track) => {
-        peer.addTrack(track, stream)
-      })
-
-      function createStreamerPeer (store) {
-        const peer = new RTCPeerConnection({
-          iceServers: [
-            {
-              urls: 'stun:stun.stunprotocol.org'
-            }
-          ]
-        })
-        peer.onnegotiationneeded = () => handleNegotiationNeededEvent(peer, store)
-
-        return peer
-      }
-
-      async function handleNegotiationNeededEvent (peer, store) {
-        const offer = await peer.createOffer()
-        await peer.setLocalDescription(offer)
-        const payloadData = {
-          sdp: peer.localDescription
-        }
-        const result = await store.dispatch('broadcast', payloadData)
-
-        const description = new RTCSessionDescription(result.sdp)
-        peer.setRemoteDescription(description).catch(e => console.log(e))
-      }
-    } else {
-      const store = this.$store
-      const peer = createViewerPeer(store)
-      peer.addTransceiver('video', { direction: 'recvonly' })
-
-      function createViewerPeer (store) {
-        const peer = new RTCPeerConnection({
-          iceServers: [
-            {
-              urls: 'stun:stun.stunprotocol.org'
-            }
-          ]
-        })
-        peer.ontrack = handleTrackEvent
-        peer.onnegotiationneeded = () => handleNegotiationNeededEvent(peer, store)
-
-        return peer
-      }
-
-      async function handleNegotiationNeededEvent (peer, store) {
-        const offer = await peer.createOffer()
-        await peer.setLocalDescription(offer)
-        const payloadData = {
-          sdp: peer.localDescription
-        }
-
-        const result = await store.dispatch('receiveStream', payloadData)
-
-        const description = new RTCSessionDescription(result.sdp)
-        peer.setRemoteDescription(description).catch(e => console.log(e))
-      }
-
-      function handleTrackEvent (e) {
-        document.getElementById('video').srcObject = e.streams[0]
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true })
+    this.$refs.localVideo.srcObject = stream
+    this.$store.commit('setting/setCamera', {
+      camera: stream
+    })
+    stream.getTracks().forEach((track) => {
+      localPC.addTrack(track, stream)
+    })
+    const offer = await localPC.createOffer()
+    await localPC.setLocalDescription(offer)
+    await this.$socket.emit('message', JSON.stringify({
+      room: this.room,
+      data: localPC.localDescription
+    }))
+    localPC.onicecandidate = async (event) => {
+      if (event.candidate) {
+        await this.$socket.emit('message', JSON.stringify({
+          room: this.room,
+          data: event.candidate
+        }))
+      } else {
+        // eslint-disable-next-line
+        console.log('allhasbeensent')
       }
     }
+    localPC.ontrack = (event) => {
+      if (event.streams[0]) {
+        this.$refs.remoteVideo.srcObject = event.streams[0]
+      }
+    }
+    this.$socket.on('message', async (data) => {
+      if (data.type === 'offer') {
+        await localPC.setRemoteDescription(new RTCSessionDescription(data))
+        const answer = await localPC.createAnswer()
+        await localPC.setLocalDescription(answer)
+        await this.$socket.emit('message', JSON.stringify({
+          room: this.room,
+          data: localPC.localDescription
+        }))
+      } else if (data.type === 'answer') {
+        await localPC.setRemoteDescription(new RTCSessionDescription(data))
+      } else {
+        await localPC.addIceCandidate(new RTCIceCandidate(data))
+      }
+    })
   },
-  //   const offer = await localPC.createOffer()
-  //   await localPC.setLocalDescription(offer)
-  //   await this.$socket.emit('message', JSON.stringify({
-  //     room: this.room,
-  //     data: localPC.localDescription
-  //   }))
-  //   localPC.onicecandidate = async (event) => {
-  //     if (event.candidate) {
-  //       await this.$socket.emit('message', JSON.stringify({
-  //         room: this.room,
-  //         data: event.candidate
-  //       }))
-  //     } else {
-  //       // eslint-disable-next-line
-  //       console.log('allhasbeensent')
-  //     }
-  //   }
-  //   localPC.ontrack = (event) => {
-  //     if (event.streams[0]) {
-  //       this.$refs.remoteVideo.srcObject = event.streams[0]
-  //     }
-  //   }
-  //   this.$socket.on('message', async (data) => {
-  //     if (data.type === 'offer') {
-  //       await localPC.setRemoteDescription(new RTCSessionDescription(data))
-  //       const answer = await localPC.createAnswer()
-  //       await localPC.setLocalDescription(answer)
-  //       await this.$socket.emit('message', JSON.stringify({
-  //         room: this.room,
-  //         data: localPC.localDescription
-  //       }))
-  //     } else if (data.type === 'answer') {
-  //       await localPC.setRemoteDescription(new RTCSessionDescription(data))
-  //     } else {
-  //       await localPC.addIceCandidate(new RTCIceCandidate(data))
-  //     }
-  //   })
-  // },
-  // async beforeDestroy () {
-  //   await this.$socket.emit('leave', this.room)
-  // },
+  async beforeDestroy () {
+    await this.$socket.emit('leave', this.room)
+  },
   methods: {
     offCamera () {
       this.$store.state.setting.camera.getVideoTracks().forEach((track) => {
