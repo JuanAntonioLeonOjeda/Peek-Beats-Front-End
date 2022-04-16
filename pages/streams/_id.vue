@@ -171,7 +171,7 @@ export default {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true })
       document.getElementById('video').srcObject = stream
       await this.$socket.emit('join-room', this.$route.params.id, this.$auth.user.userName)
-      this.$socket.emit('broadcaster')
+      await this.$socket.emit('broadcaster')
 
       const peer = createStreamerPeer()
 
@@ -208,7 +208,7 @@ export default {
       async function handleNegotiationNeededEvent (peer, socket, id) {
         const offer = await peer.createOffer()
         await peer.setLocalDescription(offer)
-        socket.emit('offer', id, peer.localDescription)
+        await socket.emit('offer', id, peer.localDescription)
         console.log('offer emitted')
       }
 
@@ -245,11 +245,11 @@ export default {
       console.log('viewer')
       let peer
       await this.$socket.emit('join-room', this.$route.params.id, this.$auth.user.userName)
-      this.$socket.emit('watcher')
+      await this.$socket.emit('watcher')
 
       this.$socket.on('offer', (id, description) => {
         console.log('on offer')
-        const peer = createViewerPeer()
+        peer = createViewerPeer()
         peer
           .setRemoteDescription(description)
           .then(() => peer.createAnswer())
@@ -270,7 +270,7 @@ export default {
       // peer.addTransceiver('video', { direction: 'recvonly' })
 
       function createViewerPeer () {
-        peer = new RTCPeerConnection({
+        const peer = new RTCPeerConnection({
           iceServers: [
             {
               urls: 'stun:stun.l.google.com:19302'
