@@ -168,13 +168,26 @@ export default {
   async mounted () {
     if (this.streamerRole) {
       const store = this.$store
+      const peerConnections = {}
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true })
       document.getElementById('video').srcObject = stream
+      this.$socket.emit('broadcaster')
 
-      const peer = createStreamerPeer(store)
+      this.$socket.on('watcher', (id) => {
+        const peer = createStreamerPeer(store)
+        peerConnections[id] = peer
 
-      stream.getTracks().forEach((track) => {
-        peer.addTrack(track, stream)
+        stream.getTracks().forEach((track) => {
+          peer.addTrack(track, stream)
+        })
+
+        peer.onicecandidate = (e) => {
+          if (e.candidate) {
+            this.$socket.emit('candidate', id, e.candidate)
+          }
+        }
+        const socket = this.$socket
+        handleNegotiationNeededEvent(peer, socket, id)
       })
 
       function createStreamerPeer (store) {
@@ -185,57 +198,107 @@ export default {
             }
           ]
         })
-        peer.onnegotiationneeded = () => handleNegotiationNeededEvent(peer, store)
+        // peer.onnegotiationneeded = () => handleNegotiationNeededEvent(peer, store)
 
         return peer
       }
-
-      async function handleNegotiationNeededEvent (peer, store) {
+      async function handleNegotiationNeededEvent (peer, socket, id) {
         const offer = await peer.createOffer()
         await peer.setLocalDescription(offer)
-        const payloadData = {
-          sdp: peer.localDescription
-        }
-        const result = await store.dispatch('broadcast', payloadData)
-
-        const description = new RTCSessionDescription(result.sdp)
-        peer.setRemoteDescription(description).catch(e => console.log(e))
+        socket.emit('offer', id, peer.localDescription)
       }
+
+      this.$socket.on('answer', (id, description) => {
+        peerConnections[id].setRemoteDescription(description)
+      })
+
+      this.$socket.on('candidate', (id, candidate) => {
+        peerConnections[id].addIceCandidate(new RTCIceCandidate(candidate))
+      })
+      // async function handleNegotiationNeededEvent (peer, store) {
+      //   const offer = await peer.createOffer()
+      //   await peer.setLocalDescription(offer)
+      //   const payloadData = {
+      //     sdp: peer.localDescription
+      //   }
+      //   const result = await store.dispatch('broadcast', payloadData)
+      //   console.log('result: ' + result)
+      //   const description = new RTCSessionDescription(result.sdp)
+      //   console.log(description)
+      //   peer.setRemoteDescription(description).catch(e => console.log(e))
+      // }
+
+      this.$socket.on('disconnectPeer', (id) => {
+        peerConnections[id].close()
+        delete peerConnections[id]
+      })
     } else {
+      let peer
       const store = this.$store
-      const peer = createViewerPeer(store)
-      peer.addTransceiver('video', { direction: 'recvonly' })
+      this.$socket.on('offer', (id, description) => {
+        const peer = createViewerPeer(store)
+        peer
+          .setRemoteDescription(description)
+          .then(() => peer.createAnswer())
+          .then(sdp => peer.setLocalDescription(sdp))
+          .then(() => {
+            this.$socket.emit('answer', id, peer.localDescription)
+          })
+        peer.ontrack = (e) => {
+          handleTrackEvent(e)
+        }
+        peer.onicecandidate = (e) => {
+          if (e.candidate) {
+            this.$socket.emit('candidate', id, e.candidate)
+          }
+        }
+      })
+      // peer.addTransceiver('video', { direction: 'recvonly' })
 
       function createViewerPeer (store) {
-        const peer = new RTCPeerConnection({
+        peer = new RTCPeerConnection({
           iceServers: [
             {
               urls: 'stun:stun.stunprotocol.org'
             }
           ]
         })
-        peer.ontrack = handleTrackEvent
-        peer.onnegotiationneeded = () => handleNegotiationNeededEvent(peer, store)
+        // peer.ontrack = handleTrackEvent
+        // peer.onnegotiationneeded = () => handleNegotiationNeededEvent(peer, store)
 
         return peer
       }
 
-      async function handleNegotiationNeededEvent (peer, store) {
-        const offer = await peer.createOffer()
-        await peer.setLocalDescription(offer)
-        const payloadData = {
-          sdp: peer.localDescription
-        }
+      // async function handleNegotiationNeededEvent (peer, store) {
+      //   const offer = await peer.createOffer()
+      //   await peer.setLocalDescription(offer)
+      //   const payloadData = {
+      //     sdp: peer.localDescription
+      //   }
 
-        const result = await store.dispatch('receiveStream', payloadData)
+      //   const result = await store.dispatch('receiveStream', payloadData)
 
-        const description = new RTCSessionDescription(result.sdp)
-        peer.setRemoteDescription(description).catch(e => console.log(e))
-      }
+      //   const description = new RTCSessionDescription(result.sdp)
+      //   peer.setRemoteDescription(description).catch(e => console.log(e))
+      // }
 
       function handleTrackEvent (e) {
         document.getElementById('video').srcObject = e.streams[0]
       }
+
+      this.$socket.on('candidate', (id, candidate) => {
+        peer
+          .addIceCandidate(new RTCIceCandidate(candidate))
+          .catch(e => console.error(e))
+      })
+
+      this.$socket.on('connect', () => {
+        this.$socket.emit('watcher')
+      })
+
+      this.$socket.on('broadcaster', () => {
+        this.$socket.emit('watcher')
+      })
     }
   },
   //   const offer = await localPC.createOffer()

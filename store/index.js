@@ -82,7 +82,7 @@ export const actions = {
   },
   async joinStream (state, id) {
     const stream = await this.$axios.get(`/streams/${id}`)
-    return stream.data
+    return stream.data.stream
   },
   async assignStreamRoom (state, roomId) {
     const stream = await this.$axios.put('/streams/me', { room: roomId })
@@ -102,6 +102,8 @@ export const actions = {
   },
   async broadcast (state, payload) {
     const stream = await this.$axios.post('/streams/broadcast', payload)
+    console.log(stream.data.sdp)
+    console.log(stream.data.type)
     return stream.data
   }
 }

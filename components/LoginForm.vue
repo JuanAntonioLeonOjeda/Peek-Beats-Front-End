@@ -155,7 +155,6 @@ export default {
           }
         })
         this.$store.commit('saveCurrentUser', this.$auth.$state.user)
-        console.log('user: ' + this.$auth.$state.user);
         this.$router.push({ path: '/home' })
       } catch (error) {
         if (this.email || this.pass1 === '') {
