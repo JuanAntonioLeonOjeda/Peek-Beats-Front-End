@@ -57,7 +57,6 @@ export const actions = {
     }
   },
   async createStream (state, id) {
-    console.log(id)
     const stream = await this.$axios.post('/streams/me', { genre: id })
     return stream.data
   },
