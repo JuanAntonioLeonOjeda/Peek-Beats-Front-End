@@ -40,22 +40,27 @@
                   Your stream room is: {{ room }}
                 </div>
                 <v-card-title>
+                  <div v-if="streamerRole">
                   Welcome: {{ $auth.user.userName }}
+                  </div>
+                  <div v-else>
+                  You are watching: {{ stream.streamer.userName }}
+                  </div>
                   <v-spacer />
                   <v-icon class="mr-3">
                     mdi-account-group
                   </v-icon>
-                  <!-- <span v-if="stream.currentViewers !== []">
+                  <span v-if="stream.currentViewers !== []">
                     {{ getTotalViewers }}
                   </span>
                   <span v-else>
                     0
-                  </span> -->
+                  </span>
                 </v-card-title>
 
                 <div v-if="streamerRole">
                   <video class="bigCinema" ref="localVideo" autoplay muted>LocalVideo</video>
-                  <video class="remoteVideo" ref="remoteVideo" autoplay>RemoteVideo</video>
+                  <video class="remoteVideo" ref="remoteVideo" autoplay muted>RemoteVideo</video>
                 </div>
                 <div v-else>
                   <video class="bigCinema" ref="remoteVideo" autoplay>RemoteVideo</video>
@@ -63,7 +68,12 @@
                 </div>
 
                 <v-card-subtitle class="pa-0 mt-5">
-                  Music genre: {{ genre.name }}
+                  <div v-if="streamerRole">
+                    Music genre: {{ genre }}
+                  </div>
+                  <div v-else>
+                    Music genre: {{ stream.genre.name }}
+                  </div>
                 </v-card-subtitle>
                 <v-card-subtitle class="pa-0">
                   <v-btn v-if="streamerRole" icon @click="editDescription">
@@ -79,6 +89,7 @@
                         <div class="text-center">
                           <div v-if="streamerRole" >
                           <StopStream />
+                          <v-spacer />
                             <v-btn class="mx-2" fab>
                               <v-icon dark>
                                 mdi-camera
@@ -141,8 +152,8 @@ export default {
       streamerRole: this.$store.state.streamer,
       userName: '',
       stream: this.$store.state.streamInfo,
-      genre: '',
-      like: false
+      like: false,
+      genre: this.$store.state.genreName
     }
   },
   computed: {
@@ -219,29 +230,6 @@ export default {
 </script>
 
 <style lang="scss">
-  // #mainFrame {
-    // #localVideo {
-    //   z-index: 100;
-    //   position: absolute;
-    //   right: 25px;
-    //   bottom: 25px;
-    //   background-color: #47494e;
-    //   height: 150px;
-    //   width: 200px;
-    // }
-  //   .bigCinema {
-  //     z-index: 50;
-  //     height: calc(100vh - 64px);
-  //     width: 100vw;
-  //     background-color: #7f828b;
-  //   }
-  //   .bottom-bar {
-  //     position: absolute;
-  //     bottom: 25px;
-  //     width: 100vw;
-  //     text-align: center;
-  //   }
-  // }
   #mainFrame {
   width: 95%;
   position: absolute;
@@ -260,7 +248,7 @@ export default {
       text-align: center;
     }
   }
-  .remoteVideo { 
+  .remoteVideo {
     display: none;
   }
 </style>

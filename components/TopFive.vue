@@ -1,7 +1,9 @@
 <template>
   <div>
     <div class="text-center">
-      Top 5 Streamers
+      <h2 class="mb-0">
+        Top 5 Streamers
+      </h2>
     </div>
     <div v-if="loading" class="progress">
       <LoadingAnimation />
@@ -17,16 +19,18 @@
           <v-container>
             <v-row justify="center">
               <v-spacer />
-              <v-col cols="3">
+              <v-col cols="3" class="pt-1">
                 <div class="avatar-container" position="absolute">
-                  <!-- <img src="../static/peek-beats-logo.JPG" alt="Avatar"> -->
+                  <v-list-item-avatar size="67">
+                    <v-img :src="`${slide.avatar}`" alt="Avatar Image" />
+                  </v-list-item-avatar>
                 </div>
               </v-col>
               <v-spacer />
-              <v-col cols="6">
+              <v-col cols="6" class="pt-1">
                 <span class="title">{{ slide.userName }}</span>
                 <p class="mb-0">Followers: {{ slide.followers.length }} </p>
-                <p>Streams made: {{ slide.myStreams.length }} </p>
+                <p>Streams: {{ slide.myStreams.length }} </p>
               </v-col>
               <v-spacer />
             </v-row>
@@ -65,17 +69,22 @@ export default {
 .text-center {
   margin-top: 50px;
 }
-// img {
-//   border-radius: 50%;
-// }
+img {
+  margin-top: 6px;
+}
 .avatar-container {
-  height: 50px;
-  width: 60px;
   top: 0;
   left: 100;
   display: inline-block;
 }
 .slide {
-  background-color: #565EE8;
+  background-color: #565de850;
+  border-radius: 25px;
+  border-color: #565EE8;
+  border-style: solid;
+  border-width: 5px !important;
+}
+.avatar {
+  background-size: cover !important;
 }
 </style>

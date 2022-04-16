@@ -6,18 +6,6 @@
           mdi-stop
         </v-icon>
       </v-btn>
-      <v-spacer />
-      <!-- @click="offCamera()" -->
-      <v-btn class="mx-2" fab>
-        <v-icon dark>
-          mdi-camera
-        </v-icon>
-      </v-btn>
-      <v-btn class="mx-2" fab>
-        <v-icon dark>
-          mdi-microphone
-        </v-icon>
-      </v-btn>
     </div>
   </div>
 </template>
@@ -28,6 +16,7 @@ export default {
   methods: {
     async stopStream () {
       await this.$store.dispatch('stopStream')
+      await this.$store.commit('changeRole')
       this.$router.push({ path: '/home' })
     }
   }
