@@ -174,6 +174,7 @@ export default {
       this.$socket.emit('broadcaster')
 
       this.$socket.on('watcher', (id) => {
+        console.log('watcher joined: ' + id)
         const peer = createStreamerPeer(store)
         peerConnections[id] = peer
 
@@ -206,6 +207,7 @@ export default {
         const offer = await peer.createOffer()
         await peer.setLocalDescription(offer)
         socket.emit('offer', id, peer.localDescription)
+        console.log('offer emitted')
       }
 
       this.$socket.on('answer', (id, description) => {
@@ -233,9 +235,12 @@ export default {
         delete peerConnections[id]
       })
     } else {
+      console.log('viewer')
       let peer
       const store = this.$store
+      this.$socket.emit('watcher')
       this.$socket.on('offer', (id, description) => {
+        console.log('on offer')
         const peer = createViewerPeer(store)
         peer
           .setRemoteDescription(description)
@@ -243,6 +248,7 @@ export default {
           .then(sdp => peer.setLocalDescription(sdp))
           .then(() => {
             this.$socket.emit('answer', id, peer.localDescription)
+            console.log('answer emitted')
           })
         peer.ontrack = (e) => {
           handleTrackEvent(e)
@@ -292,11 +298,8 @@ export default {
           .catch(e => console.error(e))
       })
 
-      this.$socket.on('connect', () => {
-        this.$socket.emit('watcher')
-      })
-
       this.$socket.on('broadcaster', () => {
+        console.log('on broadcaster')
         this.$socket.emit('watcher')
       })
     }
