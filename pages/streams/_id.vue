@@ -174,10 +174,7 @@ export default {
 
       const peer = createStreamerPeer()
 
-      peer.on('open', (streamerId) => {
-        console.log(`My Id: ${streamerId}`)
-        this.$socket.emit('join-room', this.$route.params.id, this.$auth.user.userName)
-      })
+      this.$socket.emit('join-room', this.$route.params.id, this.$auth.user.userName)
 
       this.$socket.on('watcher', (id) => {
         console.log('watcher joined: ' + id)
@@ -249,14 +246,13 @@ export default {
       let peer
       const store = this.$store
       this.$socket.emit('watcher')
+
+      this.$socket.emit('join-room', this.$route.params.id, this.$auth.user.userName)
+
       this.$socket.on('offer', (id, description) => {
         console.log('on offer')
         const peer = createViewerPeer(store)
         peer
-          .on('open', (id) => {
-            console.log(`My Id: ${id}`)
-            this.$socket.emit('join-room', this.$route.params.id, this.$auth.user.userName)
-          })
           .setRemoteDescription(description)
           .then(() => peer.createAnswer())
           .then(sdp => peer.setLocalDescription(sdp))
