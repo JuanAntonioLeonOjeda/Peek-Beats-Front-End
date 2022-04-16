@@ -58,7 +58,7 @@ export default {
   ** See https://axios.nuxtjs.org/options
   */
   axios: {
-    baseURL: 'http://localhost:5000/api'
+    baseURL: 'https://peek-beats-back-wrtc.herokuapp.com/api'
     // baseURL: 'https://peek-beats.herokuapp.com/api'
   },
 
