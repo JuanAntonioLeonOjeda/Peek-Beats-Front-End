@@ -157,25 +157,31 @@ export default {
       return this.stream.currentViewers.length
     }
   },
-  async beforeMount () {
-    const lastId = localStorage.getItem('lastId')
-    if (lastId) {
-      await this.$socket.emit('leave', this.room)
-    }
-    await this.$socket.emit('join', lastId)
-    localStorage.setItem('lastId', this.room)
-  },
+  // async beforeMount () {
+  //   const lastId = localStorage.getItem('lastId')
+  //   if (lastId) {
+  //     await this.$socket.emit('leave', this.room)
+  //   }
+  //   await this.$socket.emit('join', lastId)
+  //   localStorage.setItem('lastId', this.room)
+  // },
   async mounted () {
     if (this.streamerRole) {
-      const store = this.$store
       const peerConnections = {}
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true })
       document.getElementById('video').srcObject = stream
       this.$socket.emit('broadcaster')
 
+      const peer = createStreamerPeer()
+
+      peer.on('open', (streamerId) => {
+        console.log(`My Id: ${streamerId}`)
+        this.$socket.emit('join-room', this.$route.params.id, this.$auth.user.userName)
+      })
+
       this.$socket.on('watcher', (id) => {
         console.log('watcher joined: ' + id)
-        const peer = createStreamerPeer(store)
+
         peerConnections[id] = peer
 
         stream.getTracks().forEach((track) => {
@@ -243,6 +249,10 @@ export default {
         console.log('on offer')
         const peer = createViewerPeer(store)
         peer
+          .on('open', (id) => {
+            console.log(`My Id: ${id}`)
+            this.$socket.emit('join-room', this.$route.params.id, this.$auth.user.userName)
+          })
           .setRemoteDescription(description)
           .then(() => peer.createAnswer())
           .then(sdp => peer.setLocalDescription(sdp))
