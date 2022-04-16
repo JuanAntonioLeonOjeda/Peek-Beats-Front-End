@@ -170,11 +170,10 @@ export default {
       const peerConnections = {}
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true })
       document.getElementById('video').srcObject = stream
+      await this.$socket.emit('join-room', this.$route.params.id, this.$auth.user.userName)
       this.$socket.emit('broadcaster')
 
       const peer = createStreamerPeer()
-
-      this.$socket.emit('join-room', this.$route.params.id, this.$auth.user.userName)
 
       this.$socket.on('watcher', (id) => {
         console.log('watcher joined: ' + id)
@@ -238,20 +237,19 @@ export default {
       // }
 
       this.$socket.on('disconnectPeer', (id) => {
+        console.log(`${id} has left the room`)
         peerConnections[id].close()
         delete peerConnections[id]
       })
     } else {
       console.log('viewer')
       let peer
-      const store = this.$store
+      await this.$socket.emit('join-room', this.$route.params.id, this.$auth.user.userName)
       this.$socket.emit('watcher')
-
-      this.$socket.emit('join-room', this.$route.params.id, this.$auth.user.userName)
 
       this.$socket.on('offer', (id, description) => {
         console.log('on offer')
-        const peer = createViewerPeer(store)
+        const peer = createViewerPeer()
         peer
           .setRemoteDescription(description)
           .then(() => peer.createAnswer())
@@ -271,7 +269,7 @@ export default {
       })
       // peer.addTransceiver('video', { direction: 'recvonly' })
 
-      function createViewerPeer (store) {
+      function createViewerPeer () {
         peer = new RTCPeerConnection({
           iceServers: [
             {
