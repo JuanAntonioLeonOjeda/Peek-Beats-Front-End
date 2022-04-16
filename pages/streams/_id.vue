@@ -220,6 +220,10 @@ export default {
         peerConnections[id].setRemoteDescription(description)
       })
 
+      this.$socket.on('user-connected', (name) => {
+        console.log(`${name} has joined the room`)
+      })
+
       this.$socket.on('candidate', (id, candidate) => {
         peerConnections[id].addIceCandidate(new RTCIceCandidate(candidate))
       })
@@ -311,6 +315,10 @@ export default {
       this.$socket.on('broadcaster', () => {
         console.log('on broadcaster')
         this.$socket.emit('watcher')
+      })
+
+      this.$socket.on('user-connected', (name) => {
+        console.log(`${name} has joined the room`)
       })
     }
   },
