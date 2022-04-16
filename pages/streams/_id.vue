@@ -316,6 +316,9 @@ export default {
       })
     }
   },
+  beforeDestroy () {
+    this.$socket.close()
+  },
   //   const offer = await localPC.createOffer()
   //   await localPC.setLocalDescription(offer)
   //   await this.$socket.emit('message', JSON.stringify({
