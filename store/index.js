@@ -102,7 +102,6 @@ export const actions = {
   },
   async broadcast (state, payload) {
     const stream = await this.$axios.post('/streams/broadcast', payload)
-    console.log('voilá')
     return stream.data
   }
 }
