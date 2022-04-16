@@ -58,7 +58,7 @@ export default {
   ** See https://axios.nuxtjs.org/options
   */
   axios: {
-    baseURL: 'http://localhost:5000/api'
+    baseURL: 'https://peek-beats-back-wrtc.herokuapp.com/api'
     // baseURL: 'https://peek-beats-back-wrtc.herokuapp.com/api'
   },
 
@@ -116,7 +116,7 @@ export default {
     }
   },
   env: {
-    WS_URL: process.env.WS_URL || 'http://localhost:5050/'
+    WS_URL: process.env.WS_URL || 'https://peer-js-server-prueba.herokuapp.com'
     // WS_URL: process.env.WS_URL || 'https://peer-js-server-prueba.herokuapp.com'
   }
 }
