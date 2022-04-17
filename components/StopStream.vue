@@ -1,12 +1,10 @@
 <template>
-  <div>
-    <div class="bottom-bar d-flex justify-center">
-      <v-btn class="mx-2" fab color="error" @click="stopStream">
-        <v-icon dark>
-          mdi-stop
-        </v-icon>
-      </v-btn>
-    </div>
+  <div class="stop-container">
+    <v-btn class="mx-2" fab color="error" @click="stopStream">
+      <v-icon dark>
+        mdi-stop
+      </v-icon>
+    </v-btn>
   </div>
 </template>
 
@@ -22,3 +20,9 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.stop-container {
+  display: inline-block;
+}
+</style>

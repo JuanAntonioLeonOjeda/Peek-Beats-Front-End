@@ -61,7 +61,6 @@
                         <div class="text-center">
                           <div v-if="streamerRole">
                             <StopStream />
-                            <v-spacer />
                             <v-btn class="mx-2" fab>
                               <v-icon dark>
                                 mdi-camera

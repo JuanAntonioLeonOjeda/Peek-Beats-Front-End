@@ -1,6 +1,6 @@
 <template>
   <v-card v-if="$vuetify.breakpoint.lgOnly || $vuetify.breakpoint.xlOnly" id="chat">
-    <ul id="messages" />
+    <ul id="messages" overflow="scroll" />
     <form id="form">
       <input id="input" autocomplete="off"/><button>Send</button>
     </form>

@@ -36,7 +36,6 @@ export default {
         const stream = await this.$store.dispatch('assignStreamRoom', roomId)
         await this.$store.commit('getStreamInfo', stream.stream)
         await this.$store.commit('changeRole')
-        await this.$store.commit('saveGenre', '')
         this.$router.push({
           path: `/streams/${roomId}`
         })
