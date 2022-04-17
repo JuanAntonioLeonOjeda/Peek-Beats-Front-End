@@ -149,12 +149,13 @@ export default {
       userName: '',
       stream: this.$store.state.streamInfo,
       like: false,
-      genre: this.$store.state.genreName
+      genre: this.$store.state.genreName,
+      viewers: 0
     }
   },
   computed: {
     getTotalViewers () {
-      return this.stream.currentViewers.length
+      return this.viewers
     }
   },
   // async beforeMount () {
@@ -171,6 +172,7 @@ export default {
         await this.$socket.connect()
       }
       const peerConnections = {}
+      this.viewers = Object.keys(peerConnections).length
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true })
       document.getElementById('video').srcObject = stream
       await this.$socket.emit('join-room', this.$route.params.id, this.$auth.user.userName)
@@ -224,6 +226,7 @@ export default {
 
       this.$socket.on('user-connected', (name) => {
         console.log(`${name} has joined the room`)
+        this.viewers++
       })
 
       this.$socket.on('candidate', (id, candidate) => {
@@ -247,10 +250,12 @@ export default {
         console.log(`${id} has left the room`)
         peerConnections[id].close()
         delete peerConnections[id]
+        this.viewers--
         console.log(peerConnections)
       })
     } else {
       console.log('viewer')
+      this.viewers++
       let peer
       let counter = 0
       console.log(this.$socket)
