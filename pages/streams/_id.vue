@@ -110,7 +110,7 @@
                   </v-container>
                 </v-card-actions>
               </v-card>
-              <v-card id="chat">
+              <v-card v-if="$vuetify.breakpoint.lgOnly || $vuetify.breakpoint.xlOnly" id="chat">
                 <ul id="messages" />
                 <form id="form" action="">
                   <input id="input" autocomplete="off" /><button>Send</button>
@@ -152,11 +152,12 @@ export default {
     return {
       room: this.$route.params.id,
       streamerRole: this.$store.state.streamer,
-      userName: '',
+      userName: this.$auth.user.userName,
       stream: this.$store.state.streamInfo,
       like: false,
       genre: this.$store.state.genreName,
-      viewers: 0
+      viewers: 0,
+      avatar: this.$auth.user.avatar
     }
   },
   computed: {
@@ -270,6 +271,7 @@ export default {
         await this.$socket.connect()
       }
       await this.$socket.emit('join-room', this.$route.params.id, this.$auth.user.userName)
+      await this.$socket.emit('chat-message', `${this.$auth.user.userName} has joined the room`)
       await this.$socket.emit('watcher')
 
       this.$socket.on('offer', (streamerId, description) => {
@@ -375,12 +377,14 @@ export default {
 
     this.$socket.on('chat-message', (message) => {
       const text = document.createElement('li')
-      text.textContent = message
+      // text.textContent = message
+      text.innerHTML = `<img class="chat-img" src="${this.avatar}"> ${message}`
       messages.appendChild(text)
       window.scrollTo(0, document.body.scrollHeight)
     })
   },
   async beforeDestroy () {
+    await this.$socket.emit('chat-message', `${this.$auth.user.userName} has left the room`)
     this.$socket.close()
     if (this.streamerRole) {
       await this.$store.dispatch('stopStream')
@@ -467,9 +471,6 @@ export default {
     padding-bottom: 3rem;
     position: relative;
   }
-  #screen {
-    width: 75%
-  }
   #form {
     background: rgba(0, 0, 0, 0.15);
     display:flex;
@@ -508,5 +509,10 @@ export default {
   }
   #messages > li:nth-child(odd) {
     background: #efefef;
+  }
+  .chat-img {
+    border-radius: 25%;
+    width: 20px;
+    height: 20px;
   }
 </style>
