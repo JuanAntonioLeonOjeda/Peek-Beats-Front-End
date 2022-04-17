@@ -1,28 +1,24 @@
 <template>
-  <v-container class="mt-10">
-    <v-row align="center">
-      <v-col
-        cols="12"
-      >
-        <div class="text-center">
-          <h2 class="mb-0">
-            What music genre are you streaming?
-          </h2>
-        </div>
-      </v-col>
-    </v-row>
-    <v-row justify="center">
-      <v-col cols="6">
-        <v-select
-          v-model="genre"
-          class="mt-0"
-          :items="genres"
-          label="Choose stream's music genre"
-          item-text="name"
-        />
-      </v-col>
-    </v-row>
-    <!-- <v-select
+  <div>
+    <v-card flat class="mt-16">
+      <div>
+        <v-card-title class="justify-center">
+          <a :class="$vuetify.breakpoint.xsOnly ? 'font-weight-black title text-center' : 'font-weight-black text-md-h4 text-sm-h4 text-center'">
+            Select your genre and <span :style="[$vuetify.theme.dark === true ? {'color': '#1CEFBD'} : {'color': '#565EE8'} ]">START</span> streaming!
+          </a>
+        </v-card-title>
+        <v-row justify="center">
+          <v-col cols="6">
+            <v-select
+              v-model="genre"
+              class="mt-0"
+              :items="genres"
+              label="Choose stream's music genre"
+              item-text="name"
+            />
+          </v-col>
+        </v-row>
+        <!-- <v-select
             v-model="genre"
             :items="genres"
             label="Tags"
@@ -33,7 +29,7 @@
             </template>
             <template #item="{ item, attrs, on }">
               <v-list-item v-bind="attrs" v-on="on">
-                <v-list-item-content>
+                <v-list-item-content>x
                   <v-list-item-title>
                     <span>{{ item.name }}</span>
                   </v-list-item-title>
@@ -42,12 +38,18 @@
             </template>
           </v-select>
           {{ genre.id }} -->
-  </v-container>
+        <CreateStreamButton />
+      </div>
+    </v-card>
+    <v-divider />
+  </div>
 </template>
 
 <script>
+import CreateStreamButton from '@/components/CreateStreamButton.vue'
 export default {
   name: 'GenreSelect',
+  components: { CreateStreamButton },
   data () {
     return {
       genres: [],
@@ -75,5 +77,28 @@ export default {
 <style lang="scss" scoped>
 .d-flex {
   justify-content: center;
+}
+a {
+  position: absolute;
+  text-decoration: none;
+  margin-bottom: 25px;
+  padding: 25px;
+}
+a::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 15px;
+  border-radius: 7px;
+  background-color: #565de8bb;
+  top: 60px;
+  left: 0;
+  transform-origin: right;
+  transform: scaleX(0);
+  transition: transform .7s ease-in-out;
+}
+a:hover::before {
+  transform-origin: left;
+  transform: scaleX(1);
 }
 </style>

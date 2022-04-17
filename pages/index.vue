@@ -5,9 +5,9 @@
 <script>
 import AccessForm from '@/components/AccessForm'
 export default {
+  name: 'IndexPage',
   components: {
     AccessForm
-  },
-  name: 'IndexPage'
+  }
 }
 </script>

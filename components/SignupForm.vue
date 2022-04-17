@@ -1,56 +1,21 @@
 <template>
-  <div class="font">
-    <!-- <v-col
-        cols="12"
-        md="5"
-        class="alreadyOn deep-purple darken-2"
-      >
-        <v-card-text class="white--text">
-          <h1 class="text-center">
-            Welcome to a place where you choose what you fancy to hear
-          </h1>
-        </v-card-text>
-
-        <v-divider class="mt-3 mb-3" dark />
-
-        <v-card-text class="white--text">
-          <h1 class="text-center">
-            Already a Peek?
-          </h1>
-        </v-card-text>
-        <div class="text-center">
-          <v-btn
-            class="mt-5"
-            color="teal accent-2"
-            outlined
-            elevation="2"
-            x-large
-            dark
-            @click="stepChanger"
-          >
-            LogIn
-          </v-btn>
-        </div>
-      </v-col> -->
-    <v-col cols="12" md="12" class="formularios">
+  <div>
+    <v-col cols="12" md="12">
       <v-card-text>
-        <h1 class="teal--text text--accent-2">
-          <p>
-            Create an account
-          </p>
-        </h1>
-        <v-divider
-          class="
-              mt-3
-              mb-4"
-          dark
-        />
+        <div>
+          <h1>
+            <p>
+              Create an account
+            </p>
+          </h1>
+          <v-divider class="mt-3 mb-4" dark />
+        </div>
+
         <v-form ref="form" v-model="valid" lazy-validation>
           <v-text-field
             v-model="username"
-            background-color="blue-grey darken-2"
-            dark
-            color="white"
+            :light="$vuetify.theme.dark === true"
+            color="$vuetify.theme.light"
             outlined
             :counter="10"
             :rules="usernameRules"
@@ -61,9 +26,8 @@
           />
           <v-text-field
             v-model="email"
-            background-color="blue-grey darken-2"
-            dark
-            color="white"
+            :light="$vuetify.theme.dark === true"
+            color="$vuetify.theme.light"
             outlined
             :rules="emailRules"
             label="E-mail"
@@ -92,9 +56,8 @@
           </v-alert>
           <v-text-field
             v-model="pass1"
-            background-color="blue-grey darken-2"
-            dark
-            color="white"
+            :light="$vuetify.theme.dark === true"
+            color="$vuetify.theme.light"
             hint="At least 8 characters"
             counter
             :rules="passwordRules"
@@ -112,9 +75,8 @@
           />
           <v-text-field
             v-model="pass2"
-            background-color="blue-grey darken-2"
-            dark
-            color="white"
+            :light="$vuetify.theme.dark === true"
+            color="$vuetify.theme.light"
             hint="At least 8 characters"
             counter
             :rules="passwordRules.concat(passwordConfirmationRule)"
@@ -142,8 +104,8 @@
                 <template #activator="{ on, attrs }">
                   <v-text-field
                     v-model="date"
-                    dark
-                    color="white"
+                    :light="$vuetify.theme.dark === true"
+                    color="$vuetify.theme.light"
                     label="Birthday"
                     prepend-icon="mdi-cake-variant-outline"
                     readonly
@@ -179,8 +141,8 @@
             >
               <v-checkbox
                 v-model="checkbox"
-                color="white"
-                dark
+                :light="$vuetify.theme.dark === true"
+                color="$vuetify.theme.light"
                 :rules="[
                   (v) =>
                     !!v ||
@@ -196,8 +158,8 @@
               md="5"
             >
               <v-checkbox
-                color="white"
-                dark
+                :light="$vuetify.theme.dark === true"
+                color="$vuetify.theme.light"
                 label="Mailing List"
                 required
               />
@@ -205,11 +167,11 @@
           </v-row>
           <v-divider class="mb-5" dark />
           <div>
-            <h3 class="white--text">
+            <h3>
               <p>
                 Already have an account?
                 <a
-                  class="text-decoration-none teal--text"
+                  class="text-decoration-none"
                   @click="stepChanger"
                 > LOG IN </a>
               </p>
@@ -219,9 +181,8 @@
             <v-btn
               :disabled="!valid"
               class="mt-5"
-              color="teal accent-2"
+              color="#565EE8"
               outlined
-              elevation="2"
               x-large
               block
               @click="validate(); signup()"
@@ -238,12 +199,11 @@
 <script>
 
 export default {
+  name: 'SignupForm',
   props: {
   },
   data: () => ({
-    name: 'SignupForm',
     valid: false,
-
     username: '',
     usernameRules: [
       v => !!v || 'Username is required',
@@ -320,9 +280,10 @@ export default {
 .text-danger {
   display: none;
 }
-/* .formularios {
-  background-image: url("https://images.pexels.com/photos/63703/pexels-photo-63703.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1");
-  background-size: cover;
-  background-position: center;
-} */
+h1, a {
+  color: #565EE8;
+}
+h3 {
+  color: #353A3D;
+}
 </style>

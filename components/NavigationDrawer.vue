@@ -3,17 +3,17 @@
     <div v-if="!$vuetify.breakpoint.xs">
       <v-navigation-drawer
         app
+        width="190"
         clipped
         :mini-variant="$vuetify.breakpoint.smOnly || $vuetify.breakpoint.xsOnly"
         mini-variant-width="73"
         mobile-breakpoint="600"
-        color="#565de850"
+        color="bar"
       >
-        <!-- v-navigation-drawer antes tenía: color="bar" -->
         <v-list>
           <v-list-item link @click="$router.push({ path: '/profile' })">
             <v-list-item-avatar
-              size="67"
+              size="60"
             >
               <v-img :src="`${avatar}`" />
             </v-list-item-avatar>
@@ -26,17 +26,10 @@
               </v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
-          <!-- <v-list-item link @click="$router.push({ path: '/profile' })">
-        <v-list-item-icon>
-          <v-icon>mdi-account-circle</v-icon>
-        </v-list-item-icon>
-        <v-list-item-title></v-list-item-title>
-      </v-list-item> -->
         </v-list>
         <v-divider />
         <v-list
           nav
-          dense
         >
           <v-list-item link @click="$router.push({ path: '/home' })">
             <v-list-item-icon>
@@ -76,113 +69,58 @@
           </v-list-item>
         </v-list>
         <template #append>
-          <v-list-item @click="dayOrNigth">
-            <v-icon>
+          <v-list-item class="mb-6" @click="dayOrNigth">
+            <v-icon x-large>
               mdi-theme-light-dark
             </v-icon>
             <!-- <v-list-item-subtitle>Day/Nigth</v-list-item-subtitle> -->
-            <v-container class="ml-5" fluid>
+            <v-container class="ml-4" fluid>
               <v-switch
-                color="white"
+                color="grey"
                 inset
               />
             </v-container>
           </v-list-item>
 
-          <v-divider />
           <div v-if="$vuetify.breakpoint.smOnly || $vuetify.breakpoint.xsOnly" class="pa-2">
             <v-btn
               color="red darken-1"
-              outlined
-              elevation="2"
+              :outlined="$vuetify.theme.dark === true ? false : true"
               block
               fab
             >
               <v-icon dark>
-                mdi-power
+                mdi-logout
               </v-icon>
             </v-btn>
           </div>
           <div v-else class="pa-2">
             <v-btn
               color="red darken-1"
-              outlined
-              elevation="2"
+              :outlined="$vuetify.theme.dark === true ? false : true"
               x-large
               block
             >
-              Logout
+              <v-icon dark>
+                mdi-logout
+              </v-icon>
             </v-btn>
           </div>
         </template>
       </v-navigation-drawer>
     </div>
+
     <div v-else>
-      <v-bottom-navigation
-        fixed
-        app
-      >
-        <v-btn
-          color="teal lighten-2"
-          text
-          value="home"
-          @click="$router.push({ path: '/home' })"
-        >
-          <span>Home</span>
-
-          <v-icon>mdi-home</v-icon>
-        </v-btn>
-
-        <v-btn
-          color="teal lighten-2"
-          text
-          value="friends"
-        >
-          <span>Friends</span>
-
-          <v-icon>mdi-account-group</v-icon>
-        </v-btn>
-
-        <v-btn
-          color="deep-purple accent-4"
-          text
-          value="nearby"
-        >
-          <span>Discover</span>
-
-          <v-icon>mdi-compass</v-icon>
-        </v-btn>
-
-        <v-btn
-          color="teal lighten-2"
-          text
-          value="shuffle"
-        >
-          <span>Shuffle</span>
-
-          <v-icon>mdi-shuffle-variant</v-icon>
-        </v-btn>
-
-        <v-btn
-          color="teal lighten-2"
-          text
-          value="profile"
-          @click="$router.push({ path: '/profile' })"
-        >
-          <v-list-item-avatar
-            size="40"
-          >
-            <v-img :src="`${avatar}`" />
-          </v-list-item-avatar>
-        </v-btn>
-      </v-bottom-navigation>
+      <BottomNavigationDrawer />
     </div>
   </div>
 </template>
 
 <script>
+import BottomNavigationDrawer from '@/components/BottomNavigationDrawer.vue'
 export default {
   name: 'NavigationDrawer',
+  components: { BottomNavigationDrawer },
   data () {
     return {
       userName: '',

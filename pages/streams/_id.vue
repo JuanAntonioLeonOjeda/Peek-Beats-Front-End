@@ -24,7 +24,7 @@
     </div>
   </div> -->
   <div>
-    <NavBar />
+    <!-- <NavBar /> -->
     <NavigationDrawer />
     <v-container position="relative">
       <v-row>
@@ -41,10 +41,10 @@
                 </div>
                 <v-card-title>
                   <div v-if="streamerRole">
-                  Welcome: {{ $auth.user.userName }}
+                    Welcome: {{ $auth.user.userName }}
                   </div>
                   <div v-else>
-                  You are watching: {{ stream.streamer.userName }}
+                    You are watching: {{ stream.streamer.userName }}
                   </div>
                   <v-spacer />
                   <v-icon class="mr-3">
@@ -71,7 +71,8 @@
                   </div>
                 </v-card-subtitle>
                 <v-card-subtitle class="pa-0">
-                  <v-btn v-if="streamerRole" icon @click="editDescription">
+                  <!-- @click="editDescription" -->
+                  <v-btn v-if="streamerRole" icon>
                     <v-icon>mdi-square-edit-outline</v-icon>
                   </v-btn>
                   {{ stream.description }}
@@ -82,9 +83,9 @@
                     <v-row>
                       <v-col>
                         <div class="text-center">
-                          <div v-if="streamerRole" >
-                          <StopStream />
-                          <v-spacer />
+                          <div v-if="streamerRole">
+                            <StopStream />
+                            <v-spacer />
                             <v-btn class="mx-2" fab>
                               <v-icon dark>
                                 mdi-camera
