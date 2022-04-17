@@ -360,6 +360,25 @@ export default {
         console.log(`${name} has joined the room`)
       })
     }
+
+    const form = document.getElementById('form')
+    const input = document.getElementById('input')
+    const messages = document.getElementById('messages')
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault()
+      if (input.value) {
+        this.$socket.emit('chat-message', input.value)
+        input.value = ''
+      }
+    })
+
+    this.$socket.on('chat-message', (message) => {
+      const text = document.createElement('li')
+      text.textContent = message
+      messages.appendChild(text)
+      window.scrollTo(0, document.body.scrollHeight)
+    })
   },
   async beforeDestroy () {
     this.$socket.close()
