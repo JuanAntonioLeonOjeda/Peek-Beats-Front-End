@@ -67,8 +67,10 @@
 </template>
 
 <script>
+import LoadingAnimation from '@/components/LoadingAnimation.vue'
 export default {
   name: 'TopFive',
+  components: { LoadingAnimation },
   data () {
     return {
       top5: [],
