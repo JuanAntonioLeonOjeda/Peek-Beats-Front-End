@@ -17,6 +17,9 @@ export default {
     NavBar,
     NavigationDrawer,
     ProfileCard
+  },
+  mounted () {
+    !this.$auth.loggedIn ? this.$router.push({ path: '/' }) : console.log('allGood')
   }
 }
 </script>

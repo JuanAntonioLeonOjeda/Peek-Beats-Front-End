@@ -6,7 +6,10 @@
 
 <script>
 export default {
-  name: 'AllStreamsPage'
+  name: 'AllStreamsPage',
+  mounted () {
+    !this.$auth.loggedIn ? this.$router.push({ path: '/' }) : console.log('allGood')
+  }
 }
 </script>
 

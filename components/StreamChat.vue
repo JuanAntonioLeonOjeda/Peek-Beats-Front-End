@@ -2,7 +2,7 @@
   <v-card v-if="$vuetify.breakpoint.lgOnly || $vuetify.breakpoint.xlOnly" id="chat">
     <ul id="messages" />
     <form id="form">
-      <input id="input" autocomplete="off"/><button>Send</button>
+      <input id="input" autocomplete="off"><button>Send</button>
     </form>
   </v-card>
 </template>
@@ -41,11 +41,10 @@ export default {
 
 <style lang="scss" scoped>
 #chat {
-  width: 25%;
+  width: 250px;
   height: 90vh;
-  margin: 0;
-  padding-bottom: 3rem;
-  position: relative;
+  position: absolute;
+  right: 0 +1vw;
 }
 #form {
   background: rgba(0, 0, 0, 0.15);
@@ -57,9 +56,6 @@ export default {
   bottom: 0;
 }
 #input {
-  border: none;
-  padding: 0 1rem;
-  flex-grow: 1;
   border-radius: 2rem;
   margin: 0.25rem;
 }

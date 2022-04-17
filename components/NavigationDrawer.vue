@@ -88,6 +88,7 @@
               :outlined="$vuetify.theme.dark === true ? false : true"
               block
               fab
+              @click="$auth.logout()"
             >
               <v-icon dark>
                 mdi-logout
@@ -100,6 +101,7 @@
               :outlined="$vuetify.theme.dark === true ? false : true"
               x-large
               block
+              @click="$auth.logout()"
             >
               <v-icon dark>
                 mdi-logout
