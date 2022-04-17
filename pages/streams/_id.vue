@@ -35,7 +35,7 @@
         >
           <div class="text-center">
             <div id="mainFrame">
-              <v-card>
+              <v-card id="screen">
                 <div v-if="streamerRole">
                   Your stream room is: {{ room }}
                 </div>
@@ -111,6 +111,12 @@
                   </v-container>
                 </v-card-actions>
               </v-card>
+              <v-card v-if="$vuetify.breakpoint.lgOnly || $vuetify.breakpoint.xlOnly" id="chat">
+                <ul id="messages" />
+                <form id="form" action="">
+                  <input id="input" autocomplete="off" /><button>Send</button>
+                </form>
+              </v-card>
             </div>
           </div>
         </v-col>
@@ -147,11 +153,12 @@ export default {
     return {
       room: this.$route.params.id,
       streamerRole: this.$store.state.streamer,
-      userName: '',
+      userName: this.$auth.user.userName,
       stream: this.$store.state.streamInfo,
       like: false,
       genre: this.$store.state.genreName,
-      viewers: 0
+      viewers: 0,
+      avatar: this.$auth.user.avatar
     }
   },
   computed: {
@@ -265,6 +272,7 @@ export default {
         await this.$socket.connect()
       }
       await this.$socket.emit('join-room', this.$route.params.id, this.$auth.user.userName)
+      await this.$socket.emit('chat-message', `${this.$auth.user.userName} has joined the room`)
       await this.$socket.emit('watcher')
 
       this.$socket.on('offer', (streamerId, description) => {
@@ -355,9 +363,33 @@ export default {
         console.log(`${name} has joined the room`)
       })
     }
+
+    const form = document.getElementById('form')
+    const input = document.getElementById('input')
+    const messages = document.getElementById('messages')
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault()
+      if (input.value) {
+        this.$socket.emit('chat-message', input.value)
+        input.value = ''
+      }
+    })
+
+    this.$socket.on('chat-message', (message) => {
+      const text = document.createElement('li')
+      // text.textContent = message
+      text.innerHTML = `<img class="chat-img" src="${this.avatar}"> ${message}`
+      messages.appendChild(text)
+      window.scrollTo(0, document.body.scrollHeight)
+    })
   },
-  beforeDestroy () {
+  async beforeDestroy () {
+    await this.$socket.emit('chat-message', `${this.$auth.user.userName} has left the room`)
     this.$socket.close()
+    if (this.streamerRole) {
+      await this.$store.dispatch('stopStream')
+    }
   },
   //   const offer = await localPC.createOffer()
   //   await localPC.setLocalDescription(offer)
@@ -415,6 +447,7 @@ export default {
   width: 95%;
   position: absolute;
   left: 40px;
+  display: flex;
     .bigCinema {
       z-index: 50;
       height: calc(70vh - 90px);
@@ -431,5 +464,56 @@ export default {
   }
   .remoteVideo {
     display: none;
+  }
+  #chat {
+    width: 25%;
+    height: 90vh;
+    margin: 0;
+    padding-bottom: 3rem;
+    position: relative;
+  }
+  #form {
+    background: rgba(0, 0, 0, 0.15);
+    display:flex;
+    height: 3rem;
+    box-sizing: border-box;
+    backdrop-filter: blur(10px);
+    position: absolute;
+    bottom: 0;
+  }
+  #input {
+    border: none;
+    padding: 0 1rem;
+    flex-grow: 1;
+    border-radius: 2rem;
+    margin: 0.25rem;
+  }
+  #input:focus {
+    outline: none;
+  }
+  #form > button {
+    background: #333;
+    border: none;
+    padding: 0 1rem;
+    margin: 0.25rem;
+    border-radius: 3px;
+    outline: none;
+    color: #fff;
+  }
+  #messages {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+  #messages > li {
+    padding: 0.5rem 1rem;
+  }
+  #messages > li:nth-child(odd) {
+    background: #efefef;
+  }
+  .chat-img {
+    border-radius: 25%;
+    width: 20px;
+    height: 20px;
   }
 </style>
