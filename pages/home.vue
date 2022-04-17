@@ -34,6 +34,9 @@ export default {
     return {
       name: ''
     }
+  },
+  mounted () {
+    !this.$auth.loggedIn ? this.$router.push({ path: '/' }) : console.log('allGood')
   }
 }
 </script>

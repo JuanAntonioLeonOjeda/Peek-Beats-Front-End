@@ -118,6 +118,7 @@ export default {
     }
   },
   async mounted () {
+    !this.$auth.loggedIn ? this.$router.push({ path: '/' }) : console.log('allGood')
     if (this.streamerRole) {
       if (this.$socket.disconnected) {
         await this.$socket.connect()
@@ -268,17 +269,16 @@ export default {
 
 <style lang="scss">
 #mainFrame {
-width: 95%;
+width: 85vw;
 position: absolute;
 left: 40px;
 display: flex;
   .bigCinema {
     z-index: 50;
-    height: calc(70vh - 90px);
-    width: 100%;
+    height: calc(70vh - 75px);
+    width: calc(70vw - 75px);
     background-color: #7f828b  31;
   }
-
   .bottom-bar {
     position: absolute;
     bottom: 25px;

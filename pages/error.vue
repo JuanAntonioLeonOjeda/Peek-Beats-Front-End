@@ -7,6 +7,15 @@
   </div>
 </template>
 
+<script>
+export default {
+  name: 'ErrorPage',
+  mounted () {
+    !this.$auth.loggedIn ? this.$router.push({ path: '/' }) : console.log('allGood')
+  }
+}
+</script>
+
 <style>
   .error-page {
     width: 100vw;
