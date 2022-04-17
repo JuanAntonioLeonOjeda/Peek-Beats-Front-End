@@ -171,7 +171,7 @@
               <p>
                 Already have an account?
                 <a
-                  class="text-decoration-none"
+                  class="sign text-decoration-none"
                   @click="stepChanger"
                 > LOG IN </a>
               </p>
@@ -280,7 +280,10 @@ export default {
 .text-danger {
   display: none;
 }
-h1, a {
+h1 {
+  color: #565EE8;
+}
+.sign {
   color: #565EE8;
 }
 h3 {

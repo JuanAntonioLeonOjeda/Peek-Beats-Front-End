@@ -53,7 +53,7 @@
               <p>
                 ¿New user?
                 <a
-                  class="text-decoration-none"
+                  class="join text-decoration-none"
                   @click="stepChanger"
                 > JOIN NOW </a>
               </p>
@@ -152,7 +152,10 @@ export default {
 .text-danger {
   display: none;
 }
-h1, a {
+h1{
+  color: #565EE8;
+}
+.join {
   color: #565EE8;
 }
 h3 {
