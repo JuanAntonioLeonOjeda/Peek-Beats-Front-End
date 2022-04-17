@@ -167,18 +167,21 @@ export default {
   // },
   async mounted () {
     if (this.streamerRole) {
+      if (this.$socket.disconnected) {
+        await this.$socket.connect()
+      }
       const peerConnections = {}
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true })
       document.getElementById('video').srcObject = stream
       await this.$socket.emit('join-room', this.$route.params.id, this.$auth.user.userName)
       await this.$socket.emit('broadcaster')
 
-      const peer = createStreamerPeer()
-
       this.$socket.on('watcher', (id) => {
+        const peer = createStreamerPeer()
         console.log('watcher joined: ' + id)
 
         peerConnections[id] = peer
+        console.log(peerConnections)
 
         stream.getTracks().forEach((track) => {
           peer.addTrack(track, stream)
@@ -213,6 +216,9 @@ export default {
       }
 
       this.$socket.on('answer', (id, description) => {
+        console.log('on answer:')
+        console.log(peerConnections[id])
+        console.log(description)
         peerConnections[id].setRemoteDescription(description)
       })
 
@@ -221,6 +227,7 @@ export default {
       })
 
       this.$socket.on('candidate', (id, candidate) => {
+        candidate.usernameFragment = null
         peerConnections[id].addIceCandidate(new RTCIceCandidate(candidate))
       })
       // async function handleNegotiationNeededEvent (peer, store) {
@@ -240,30 +247,44 @@ export default {
         console.log(`${id} has left the room`)
         peerConnections[id].close()
         delete peerConnections[id]
+        console.log(peerConnections)
       })
     } else {
       console.log('viewer')
       let peer
+      let counter = 0
+      console.log(this.$socket)
+      console.log(this.$socket.io)
+      if (this.$socket.disconnected) {
+        await this.$socket.connect()
+      }
       await this.$socket.emit('join-room', this.$route.params.id, this.$auth.user.userName)
       await this.$socket.emit('watcher')
 
-      this.$socket.on('offer', (id, description) => {
-        console.log('on offer')
-        peer = createViewerPeer()
-        peer
-          .setRemoteDescription(description)
-          .then(() => peer.createAnswer())
-          .then(sdp => peer.setLocalDescription(sdp))
-          .then(() => {
-            this.$socket.emit('answer', id, peer.localDescription)
-            console.log('answer emitted')
-          })
-        peer.ontrack = (e) => {
-          handleTrackEvent(e)
-        }
-        peer.onicecandidate = (e) => {
-          if (e.candidate) {
-            this.$socket.emit('candidate', id, e.candidate)
+      this.$socket.on('offer', (streamerId, description) => {
+        if (counter === 0) {
+          counter++
+          console.log('on offer')
+          peer = createViewerPeer()
+
+          const socket = this.$socket
+
+          handleAnswer(peer, streamerId, description, socket)
+          // peer
+          //   .setRemoteDescription(description)
+          //   .then(() => peer.createAnswer())
+          //   .then(sdp => peer.setLocalDescription(sdp))
+          //   .then(() => {
+          //     this.$socket.emit('answer', streamerId, peer.localDescription)
+          //     console.log('answer emitted')
+          //   })
+          peer.ontrack = (e) => {
+            handleTrackEvent(e)
+          }
+          peer.onicecandidate = (e) => {
+            if (e.candidate) {
+              this.$socket.emit('candidate', streamerId, e.candidate)
+            }
           }
         }
       })
@@ -281,6 +302,18 @@ export default {
         // peer.onnegotiationneeded = () => handleNegotiationNeededEvent(peer, store)
 
         return peer
+      }
+
+      async function handleAnswer (peer, streamerId, description, socket) {
+        console.log('handle answer')
+        console.log(peer)
+        await peer.setRemoteDescription(description)
+        const answer = await peer.createAnswer()
+        console.log(answer)
+        await peer.setLocalDescription(answer)
+        console.log(peer)
+        socket.emit('answer', streamerId, peer.localDescription)
+        console.log('answer emitted')
       }
 
       // async function handleNegotiationNeededEvent (peer, store) {
@@ -301,6 +334,7 @@ export default {
       }
 
       this.$socket.on('candidate', (id, candidate) => {
+        candidate.usernameFragment = null
         peer
           .addIceCandidate(new RTCIceCandidate(candidate))
           .catch(e => console.error(e))
