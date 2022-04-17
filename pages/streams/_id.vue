@@ -35,7 +35,7 @@
         >
           <div class="text-center">
             <div id="mainFrame">
-              <v-card>
+              <v-card id="screen">
                 <div v-if="streamerRole">
                   Your stream room is: {{ room }}
                 </div>
@@ -109,6 +109,12 @@
                     </v-row>
                   </v-container>
                 </v-card-actions>
+              </v-card>
+              <v-card id="chat">
+                <ul id="messages" />
+                <form id="form" action="">
+                  <input id="input" autocomplete="off" /><button>Send</button>
+                </form>
               </v-card>
             </div>
           </div>
@@ -355,8 +361,11 @@ export default {
       })
     }
   },
-  beforeDestroy () {
+  async beforeDestroy () {
     this.$socket.close()
+    if (this.streamerRole) {
+      await this.$store.dispatch('stopStream')
+    }
   },
   //   const offer = await localPC.createOffer()
   //   await localPC.setLocalDescription(offer)
@@ -414,6 +423,7 @@ export default {
   width: 95%;
   position: absolute;
   left: 40px;
+  display: flex;
     .bigCinema {
       z-index: 50;
       height: calc(70vh - 90px);
@@ -430,5 +440,54 @@ export default {
   }
   .remoteVideo {
     display: none;
+  }
+  #chat {
+    width: 25%;
+    height: 90vh;
+    margin: 0;
+    padding-bottom: 3rem;
+    position: relative;
+  }
+  #screen {
+    width: 75%
+  }
+  #form {
+    background: rgba(0, 0, 0, 0.15);
+    display:flex;
+    height: 3rem;
+    box-sizing: border-box;
+    backdrop-filter: blur(10px);
+    position: absolute;
+    bottom: 0;
+  }
+  #input {
+    border: none;
+    padding: 0 1rem;
+    flex-grow: 1;
+    border-radius: 2rem;
+    margin: 0.25rem;
+  }
+  #input:focus {
+    outline: none;
+  }
+  #form > button {
+    background: #333;
+    border: none;
+    padding: 0 1rem;
+    margin: 0.25rem;
+    border-radius: 3px;
+    outline: none;
+    color: #fff;
+  }
+  #messages {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+  #messages > li {
+    padding: 0.5rem 1rem;
+  }
+  #messages > li:nth-child(odd) {
+    background: #efefef;
   }
 </style>
