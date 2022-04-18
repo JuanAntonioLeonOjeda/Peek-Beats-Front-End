@@ -169,7 +169,7 @@ a::before {
   position: absolute;
   width: 100%;
   height: 15px;
-  border-radius: 7px;
+  border-radius: 2px;
   background-color: #565de8bb;
   top: 60px;
   left: 0;

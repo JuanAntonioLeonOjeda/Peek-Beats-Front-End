@@ -53,12 +53,12 @@
                     <p class="followers mb-0">
                       <v-icon color="#565EE8" class="mr-6">
                         mdi-account-heart-outline
-                      </v-icon>{{ slide.followers.length }}
+                      </v-icon><span class="nmrs">{{ slide.followers.length }}</span>
                     </p>
                     <p class="streams">
-                      <v-icon color="red accent-4" class="ml-1 mr-4">
+                      <v-icon color="red accent-4" class="ml-1 mr-5">
                         mdi-video-wireless-outline
-                      </v-icon> {{ slide.myStreams.length }}
+                      </v-icon> <span class="nmrs">{{ slide.myStreams.length }}</span>
                     </p>
                   </v-col>
                   <v-spacer />
@@ -161,7 +161,7 @@ a::before {
   position: absolute;
   width: 100%;
   height: 15px;
-  border-radius: 7px;
+  border-radius: 2px;
   background-color: #565de8bb;
   top: 60px;
   left: 0;
@@ -179,6 +179,11 @@ a:hover::before {
   position: absolute;
   right: 12px;
   bottom: 3px;
+}
+.nmrs {
+  z-index: 12;
+  position: absolute;
+  top: 3px;
 }
 .addStream {
   // background-color: #ffffff93 !important;
