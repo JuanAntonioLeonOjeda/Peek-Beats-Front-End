@@ -1,8 +1,8 @@
 <template>
-  <v-card v-if="$vuetify.breakpoint.lgOnly || $vuetify.breakpoint.xlOnly" id="chat">
+  <v-card v-if="$vuetify.breakpoint.lgOnly || $vuetify.breakpoint.xlOnly" id="chat" flat overflow="scroll">
     <ul id="messages" overflow="scroll" />
     <form id="form">
-      <input id="input" autocomplete="off"><button>Send</button>
+      <input id="input" autocomplete="off"><v-btn color="accent">Send</v-btn>
     </form>
   </v-card>
 </template>
@@ -24,7 +24,7 @@ export default {
     form.addEventListener('submit', (e) => {
       e.preventDefault()
       if (input.value) {
-        this.$socket.emit('chat-message', `<p class="dialog"> <img class="chat-img" src="${this.avatar}"> ${this.userName} said: </p> <p>${input.value}</p>`)
+        this.$socket.emit('chat-message', `<p class="dialog" style="font-weight: bold"> <img class="chat-img" src="${this.avatar}"> ${this.userName} said: </p> <p>${input.value}</p>`)
         input.value = ''
       }
     })
@@ -41,35 +41,35 @@ export default {
 
 <style lang="scss" scoped>
 #chat {
-  width: 250px;
-  height: 90vh;
+  width: 17vw;
+  height: 78vh;
   position: absolute;
-  right: 0 +1vw;
+  right: 0;
 }
 #form {
-  background: rgba(0, 0, 0, 0.15);
+  background: rgba(44, 51, 156, 0.355);
   display:flex;
   height: 3rem;
   box-sizing: border-box;
   backdrop-filter: blur(10px);
   position: absolute;
   bottom: 0;
+  width: 100%;
 }
 #input {
   border-radius: 2rem;
   margin: 0.25rem;
+  width: 75%
 }
 #input:focus {
   outline: none;
 }
 #form > button {
-  background: #333;
   border: none;
   padding: 0 1rem;
   margin: 0.25rem;
   border-radius: 3px;
   outline: none;
-  color: #fff;
 }
 #messages {
   list-style-type: none;

@@ -9,15 +9,19 @@
           md="12"
           lg="12"
         >
-          <div class="text-center">
-            <div id="mainFrame">
-              <v-card id="screen">
-                <div v-if="streamerRole">
-                  Your stream room is: {{ room }}
+              <v-card id="screen" flat>
+                <div>
+                  <video id="video" class="bigCinema" autoplay>LocalVideo</video>
                 </div>
-                <v-card-title>
+                <StreamChat />
+              </v-card>
+                </v-col>
+            </v-row>
+    </v-container>
+              <v-card flat class="text-center">
+                <v-card-title class="ml-50">
                   <div v-if="streamerRole">
-                    Welcome: {{ $auth.user.userName }}
+                    {{ $auth.user.userName }}, you are streaming!
                   </div>
                   <div v-else>
                     You are watching: {{ stream.streamer.userName }}
@@ -33,11 +37,6 @@
                     0
                   </span>
                 </v-card-title>
-
-                <div>
-                  <video id="video" class="bigCinema" autoplay>LocalVideo</video>
-                </div>
-
                 <v-card-subtitle class="pa-0 mt-5">
                   <div v-if="streamerRole">
                     Music genre: {{ genre }}
@@ -53,7 +52,6 @@
                   </v-btn>
                   {{ stream.description }}
                 </v-card-subtitle>
-
                 <v-card-actions>
                   <v-container>
                     <v-row>
@@ -79,12 +77,6 @@
                   </v-container>
                 </v-card-actions>
               </v-card>
-              <StreamChat />
-            </div>
-          </div>
-        </v-col>
-      </v-row>
-    </v-container>
   </div>
 </template>
 
@@ -268,23 +260,21 @@ export default {
 </script>
 
 <style lang="scss">
-#mainFrame {
-width: 85vw;
-position: absolute;
-left: 40px;
-display: flex;
-  .bigCinema {
-    z-index: 50;
-    height: calc(70vh - 75px);
-    width: calc(70vw - 75px);
-    background-color: #7f828b  31;
-  }
-  .bottom-bar {
-    position: absolute;
-    bottom: 25px;
-    width: 100%;
-    text-align: center;
-  }
+.bigCinema {
+  z-index: 50;
+  height: calc(85vh - 75px);
+  width: calc(75vw - 75px);
+  background-color: #7f828b  31;
+}
+.bottom-bar {
+  position: absolute;
+  bottom: 25px;
+  width: 100%;
+  text-align: center;
+}
+#screen {
+  height: 78vh;
+  display: flex;
 }
 .chat-img {
 border-radius: 50%;
@@ -297,10 +287,10 @@ display: flex;
 align-items: center;
 justify-content: center;
 }
-#messages > li {
-  padding: 0.5rem 1rem;
-}
 #messages > li:nth-child(odd) {
-  background: #efefef;
+  background: rgba(44, 51, 156, 0.355);
+}
+li > p {
+  margin-bottom: 0px !important;
 }
 </style>

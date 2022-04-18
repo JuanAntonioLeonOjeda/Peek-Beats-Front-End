@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-btn color="primary" @click="AddFavouriteStreamer">
+    <v-btn color="accent" @click="AddFavouriteStreamer">
       Add Favourite Streamer
     </v-btn>
     <FavouriteStreamerAlert v-if="show" :message="message" />
