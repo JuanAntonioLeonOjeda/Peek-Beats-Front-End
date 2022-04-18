@@ -15,10 +15,9 @@
     </div>
     <v-main v-else-if="$vuetify.breakpoint.xl || $vuetify.breakpoint.lg || $vuetify.breakpoint.md">
       <v-container class="mt-5 fill-height" fluid>
-        <div :class="windowSize.x >= '1459' ? 'loroLoco roll' : 'loroLoco bye'">
+        <div :class="windowSize.x >= '1870' ? 'loroLoco roll' : 'bye'">
           <v-img
-            :class="$vuetify.breakpoint.xl ? 'wha' : 'stay'"
-            width="170px"
+            :width="windowSize.x >= '1870' ? '170px' : '100px'"
 
             :src="require('../static/LORO-XL.png')"
           />
@@ -147,7 +146,10 @@ v-card {
   bottom: calc(475px + (26 - 10) * ((120vw - 210px) / (1300 - 100)));
 }
 .bye {
-  display: none;
+  z-index: 12;
+  position: absolute;
+  left: 50px;
+  top: 50px;
 }
 .peekLogo {
   margin: 23px 0px 5px 23px;

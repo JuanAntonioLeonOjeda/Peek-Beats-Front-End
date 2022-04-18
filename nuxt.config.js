@@ -97,26 +97,35 @@ export default {
           // 363E43
           primary: '#fff',
           accent: '#1CEFBD',
+          accentIcons: 'white',
           secondary: colors.amber.darken3,
           info: colors.teal.lighten1,
           warning: colors.amber.base,
           error: colors.deepOrange.accent4,
           success: colors.green.accent3,
           topBar: '#565EE8',
+          topNavDraw: '#3e454a',
+          navDrawer: '#353A3D',
           bar: '#353A3D',
-          footer: '#353A3D'
+          footer: '#353A3D',
+          mainCards: '#1e1e1e'
         },
         light: {
           primary: '#000000',
           accent: '#565EE8',
+          accentIcons: '#565EE8',
           secondary: colors.amber.darken3,
           info: colors.teal.lighten1,
           warning: colors.amber.base,
           error: colors.deepOrange.accent4,
           success: colors.green.accent3,
           topBar: '#fff',
-          bar: '#F2F2F2',
-          footer: '#F2F2F2'
+          topNavDraw: '#fff',
+          navDrawer: '#f5f2f2',
+          bar: '#fff',
+          footer: '#fff',
+          mainCards: '#F2F2F2'
+          // red accent-4
         }
       }
     }

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card flat class="mt-16">
+    <v-card flat class="mt-16" color="mainCards">
       <div>
         <v-card-title class="justify-center">
           <a :class="$vuetify.breakpoint.xsOnly ? 'font-weight-black title text-center' : 'font-weight-black text-md-h4 text-sm-h4 text-center'">
@@ -89,7 +89,7 @@ a::before {
   position: absolute;
   width: 100%;
   height: 15px;
-  border-radius: 7px;
+  border-radius: 2px;
   background-color: #565de8bb;
   top: 60px;
   left: 0;
