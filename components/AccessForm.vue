@@ -17,7 +17,7 @@
       <v-container class="mt-5 fill-height" fluid>
         <div :class="windowSize.x >= '1870' ? 'loroLoco roll' : 'bye'">
           <v-img
-            :width="windowSize.x >= '1870' ? '170px' : '100px'"
+            :width="windowSize.x >= '1870' ? '180px' : '100px'"
 
             :src="require('../static/LORO-XL.png')"
           />
@@ -91,8 +91,7 @@ export default {
     return {
       loading: true,
       windowSize: {
-        x: 0,
-        y: 0
+        x: 0
       }
     }
   },
@@ -100,14 +99,14 @@ export default {
     clearInterval(this.interval)
   },
   mounted () {
-    this.onResize()
     this.interval = setInterval(() => {
       this.loading = false
     }, 1000)
+    this.onResize()
   },
   methods: {
     onResize () {
-      this.windowSize = { x: window.innerWidth, y: window.innerHeight }
+      this.windowSize = { x: window.innerWidth }
     }
   }
 }
@@ -142,8 +141,8 @@ v-card {
 .loroLoco {
   z-index: 12;
   position: absolute;
-  left: 38%;
-  bottom: calc(475px + (26 - 10) * ((120vw - 210px) / (1300 - 100)));
+  left: 43.15%;
+  bottom: calc(262px + (26 - 10) * ((120vw - 210px) / (1300 - 100)));
 }
 .bye {
   z-index: 12;
@@ -155,12 +154,12 @@ v-card {
   margin: 23px 0px 5px 23px;
 }
 .move {
-  animation:bounce-in-bck 1.5s both
+  animation:bounce-in-bck 0.5s both
 }
 @keyframes bounce-in-bck{0%{transform:scale(7);animation-timing-function:ease-in;opacity:0}38%{transform:scale(1);animation-timing-function:ease-out;opacity:1}55%{transform:scale(1.5);animation-timing-function:ease-in}72%{transform:scale(1);animation-timing-function:ease-out}81%{transform:scale(1.24);animation-timing-function:ease-in}89%{transform:scale(1);animation-timing-function:ease-out}95%{transform:scale(1.04);animation-timing-function:ease-in}100%{transform:scale(1);animation-timing-function:ease-out}}
 
 .roll {
-  animation:roll-in-left 3s ease-out both
+  animation:roll-in-left 2s ease-out both
 }
 @keyframes roll-in-left{0%{transform:translateX(-1900px) rotate(-1080deg);opacity:0}100%{transform:translateX(0) rotate(0deg);opacity:1}}
 </style>
