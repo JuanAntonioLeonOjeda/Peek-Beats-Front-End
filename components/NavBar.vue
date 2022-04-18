@@ -31,6 +31,7 @@
           <v-spacer />
 
           <v-avatar
+            class="peekLetrasMbl"
             :tile="true"
             height="49"
             width="205"
@@ -196,6 +197,9 @@ export default {
   position: absolute;
   left: 10px;
   top: 21px;
+}
+.peekLetrasMbl {
+  left: 8%;
 }
 .logoLocoLetras {
   z-index: 1;
