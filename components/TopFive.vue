@@ -1,19 +1,20 @@
 <template>
   <div>
-    <v-card flat class="pb-1 mt-10">
+    <v-card flat class="pb-1 mt-10" color="mainCards">
       <div v-if="loading" class="progress">
         <LoadingAnimation />
       </div>
       <div v-else>
         <v-card-title class="justify-center">
           <a :class="$vuetify.breakpoint.xsOnly ? 'font-weight-black title' : 'font-weight-black text-md-h4 text-sm-h4'">
-            Top 5 Streamers
+            Top Streamers
           </a>
         </v-card-title>
         <carousel-3d
           :disable3d="true"
-          :space="365"
+          :space="320"
           :controls-visible="true"
+          :width="290"
           :height="110"
         >
           <slide v-for="(slide, i) in top5" :key="i" :index="i" class="slide" :style="[$vuetify.theme.dark === true ? {'background-color': '#ffffff00'} : {'background-color': '#353a3d9d'}]">
@@ -32,10 +33,10 @@
                     </v-list-item-avatar>
                   </div> -->
                   <div class="invisible">
-                    <v-btn class="followStream" @click="alert1">
+                    <v-btn class="followStream" color="#565de898" @click="alert1">
                       Follow
                     </v-btn>
-                    <v-btn class="addStream" fab @click="alert2">
+                    <v-btn class="addStream" fab color="#ffffff63" @click="alert2">
                       <v-icon color="red accent-4">
                         mdi-heart
                       </v-icon>
@@ -44,15 +45,20 @@
                 </v-col>
                 <v-spacer />
                 <figcaption
+                  class="title-container"
                   :style="[$vuetify.theme.dark === true ? {'background-color': '#ffffff10'} : {'background-color': '#ffffff10'}]"
                 >
                   <v-col cols="12" class="tags" :style="[$vuetify.theme.dark === true ? {'color': 'white'} : {'color': 'white'}]">
                     <span class="title">{{ slide.userName }}</span>
                     <p class="followers mb-0">
-                      Followers: {{ slide.followers.length }}
+                      <v-icon color="#565EE8" class="mr-6">
+                        mdi-account-heart-outline
+                      </v-icon>{{ slide.followers.length }}
                     </p>
                     <p class="streams">
-                      Streams made: {{ slide.myStreams.length }}
+                      <v-icon color="red accent-4" class="ml-1 mr-4">
+                        mdi-video-wireless-outline
+                      </v-icon> {{ slide.myStreams.length }}
                     </p>
                   </v-col>
                   <v-spacer />
@@ -63,6 +69,7 @@
         </carousel-3d>
       </div>
     </v-card>
+    <v-divider />
   </div>
 </template>
 
@@ -102,17 +109,18 @@ export default {
 }
 .title {
   font-size: 1.6rem !important;
-  margin-left: 10%;
+  position: absolute;
+  top: 8px;
 }
 .followers{
   font-weight: bold;
   position: absolute;
-  bottom: 30px;
+  bottom: 40px;
 }
 .streams {
   font-weight: bold;
   position: absolute;
-  bottom: -10px;
+  bottom: -5px;
 }
 img {
   margin-top: 6px;
@@ -120,21 +128,15 @@ img {
 .avatar-container {
   z-index: 1;
   position: absolute;
-  right: -5px;
+  right: -6px;
   top: -4px;
 }
-// .followers-container {
-//   z-index: 123;
-//   position: absolute;
-//   left: 150px;
-//   top: 30px;
-// }
 .slide {
   border-radius: 5px;
   // border-style: solid;
   // border-width: 2px !important;
 }
-.carousel-3d-container figcaption {
+.carousel-3d-container figcaption  {
   z-index: 1;
   position: absolute;
   background-color: #ffffff00;
@@ -142,7 +144,7 @@ img {
   border-radius: 5px;
   padding: 5px;
   height: 100%;
-  min-width: 65%;
+  width: 170px;
   box-sizing: border-box;
 }
 .avatar {
@@ -172,20 +174,20 @@ a:hover::before {
   transform: scaleX(1);
 }
 .followStream {
-  background-color: #565EE8 !important;
+  // background-color: #565EE8 !important;
   z-index: 12;
   position: absolute;
-  right: 110px;
-  bottom: 10px;
+  right: 12px;
+  bottom: 3px;
 }
 .addStream {
-  background-color: white !important;
+  // background-color: #ffffff93 !important;
   z-index: 12;
   position: absolute;
-  right: 60px;
-  bottom: 10px;
-  width:30px;
-  height:30px;
+  right: 75px;
+  top: 3px;
+  width:35px;
+  height:35px;
 }
 .invisible {
   display: none;

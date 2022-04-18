@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card flat class="pb-1 mt-10">
+    <v-card flat class="pb-1 mt-10" color="mainCards">
       <div v-if="typeof liveStreams === 'string'">
         {{ liveStreams }}
       </div>
