@@ -59,7 +59,7 @@ export default {
   */
   axios: {
     // baseURL: 'http://localhost:5000/api'
-    baseURL: 'https://peek-beats.netlify.app/api'
+    baseURL: 'https://peek-beats-back-wrtc.herokuapp.com/api'
   },
 
   auth: {
