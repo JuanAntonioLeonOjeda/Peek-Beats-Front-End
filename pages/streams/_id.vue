@@ -2,81 +2,82 @@
   <div>
     <!-- <NavBar /> -->
     <NavigationDrawer />
-    <v-container position="relative">
-      <v-row>
-        <v-col
-          cols="12"
-          md="12"
-          lg="12"
-        >
-              <v-card id="screen" flat>
-                <div>
-                  <video id="video" class="bigCinema" autoplay>LocalVideo</video>
-                </div>
-                <StreamChat />
-              </v-card>
-                </v-col>
-            </v-row>
-    </v-container>
-              <v-card flat class="text-center">
-                <v-card-title class="ml-50">
-                  <div v-if="streamerRole">
-                    {{ $auth.user.userName }}, you are streaming!
-                  </div>
-                  <div v-else>
-                    You are watching: {{ stream.streamer.userName }}
-                  </div>
-                  <v-spacer />
-                  <v-icon class="mr-3">
-                    mdi-account-group
+    <v-row>
+      <v-col
+        cols="8"
+        class="ml-15 pa-5"
+      >
+        <v-card id="screen" flat color="mainCards">
+          <div>
+            <video id="video" class="bigCinema" autoplay>LocalVideo</video>
+          </div>
+        </v-card>
+      </v-col>
+      <v-spacer />
+      <v-col
+        cols="3"
+        class="mr-15 pa-5"
+      >
+        <StreamChat />
+      </v-col>
+    </v-row>
+    <v-card flat class="text-center" color="mainCards">
+      <v-card-title class="ml-50">
+        <div v-if="streamerRole">
+          {{ $auth.user.userName }}, you are streaming!
+        </div>
+        <div v-else>
+          You are watching: {{ stream.streamer.userName }}
+        </div>
+        <v-spacer />
+        <v-icon class="mr-3">
+          mdi-account-group
+        </v-icon>
+        <span v-if="stream.currentViewers !== []">
+          {{ getTotalViewers }}
+        </span>
+        <span v-else>
+          0
+        </span>
+      </v-card-title>
+      <v-card-subtitle class="pa-0 mt-5">
+        <div v-if="streamerRole">
+          Music genre: {{ genre }}
+        </div>
+        <div v-else>
+          Music genre: {{ stream.genre.name }}
+        </div>
+      </v-card-subtitle>
+      <v-card-subtitle class="pa-0">
+        <!-- @click="editDescription" -->
+        <v-btn v-if="streamerRole" icon>
+          <v-icon>mdi-square-edit-outline</v-icon>
+        </v-btn>
+        {{ stream.description }}
+      </v-card-subtitle>
+      <v-card-actions>
+        <v-row>
+          <v-col>
+            <div class="text-center">
+              <div v-if="streamerRole">
+                <StopStream />
+                <v-btn class="mx-2" fab>
+                  <v-icon dark>
+                    mdi-camera
                   </v-icon>
-                  <span v-if="stream.currentViewers !== []">
-                    {{ getTotalViewers }}
-                  </span>
-                  <span v-else>
-                    0
-                  </span>
-                </v-card-title>
-                <v-card-subtitle class="pa-0 mt-5">
-                  <div v-if="streamerRole">
-                    Music genre: {{ genre }}
-                  </div>
-                  <div v-else>
-                    Music genre: {{ stream.genre.name }}
-                  </div>
-                </v-card-subtitle>
-                <v-card-subtitle class="pa-0">
-                  <!-- @click="editDescription" -->
-                  <v-btn v-if="streamerRole" icon>
-                    <v-icon>mdi-square-edit-outline</v-icon>
-                  </v-btn>
-                  {{ stream.description }}
-                </v-card-subtitle>
-                <v-card-actions>
-                  <v-container>
-                    <v-row>
-                      <v-col>
-                        <div class="text-center">
-                          <div v-if="streamerRole">
-                            <StopStream />
-                            <v-btn class="mx-2" fab>
-                              <v-icon dark>
-                                mdi-camera
-                              </v-icon>
-                            </v-btn>
-                            <v-btn class="mx-2" fab>
-                              <v-icon dark>
-                                mdi-microphone
-                              </v-icon>
-                            </v-btn>
-                          </div>
-                          <AddFavouriteStreamer v-else />
-                        </div>
-                      </v-col>
-                    </v-row>
-                  </v-container>
-                </v-card-actions>
-              </v-card>
+                </v-btn>
+                <v-btn class="mx-2" fab>
+                  <v-icon dark>
+                    mdi-microphone
+                  </v-icon>
+                </v-btn>
+              </div>
+              <AddFavouriteStreamer v-else />
+            </div>
+          </v-col>
+        </v-row>
+      </v-card-actions>
+    </v-card>
   </div>
 </template>
 
@@ -262,8 +263,9 @@ export default {
 <style lang="scss">
 .bigCinema {
   z-index: 50;
-  height: calc(85vh - 75px);
-  width: calc(75vw - 75px);
+  margin-top: 5px;
+  height: calc(82vh - 75px);
+  width: 100%;
   background-color: #7f828b  31;
 }
 .bottom-bar {
@@ -273,24 +275,26 @@ export default {
   text-align: center;
 }
 #screen {
-  height: 78vh;
-  display: flex;
+  height: 75vh;
 }
 .chat-img {
 border-radius: 50%;
-width: 30px;
-height: 30px;
-margin-right: 15px;
+width: 40px;
+height: 40px;
+margin-right: 10px;
 }
 .dialog {
 display: flex;
-align-items: center;
-justify-content: center;
+padding: 4px 0 0 6px;
+
+// align-items: center;
+// justify-content: center;
 }
 #messages > li:nth-child(odd) {
-  background: rgba(44, 51, 156, 0.355);
+  background: rgba(195, 194, 194, 0.236);
 }
 li > p {
+  margin-left: 10px !important;
   margin-bottom: 0px !important;
 }
 </style>

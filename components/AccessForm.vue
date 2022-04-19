@@ -141,6 +141,8 @@ v-card {
 .loroLoco {
   z-index: 12;
   position: absolute;
+  /* left: 43.19%;
+  bottom: 389px */
   left: 43.15%;
   bottom: calc(262px + (26 - 10) * ((120vw - 210px) / (1300 - 100)));
 }
