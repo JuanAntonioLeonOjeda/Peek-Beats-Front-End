@@ -1,79 +1,160 @@
 <template>
-  <v-app-bar
-    color="deep-purple accent-4"
-    dark
-    app
-    clipped-left
-    elevation="20"
-    rounded
-  >
-    <v-container>
-      <v-row class="align-center">
-        <v-col cols="2" class="text-center">
-          <v-btn> Discover </v-btn>
-        </v-col>
-        <v-spacer />
-        <v-icon>mdi-heart</v-icon>
-        <v-col cols="2">
-          <v-toolbar-title>Peek Beats</v-toolbar-title>
-        </v-col>
-        <v-spacer />
-        <v-autocomplete
-          v-model="model"
-          :items="genres"
-          :search-input.sync="search"
-          chips
-          clearable
-          hide-details
-          hide-selected
-          item-text="name"
-          item-value="symbol"
-          label="Search for a genre..."
-          solo-inverted
-          multiple
-          rounded
-        >
-          <template #no-data>
-            <v-list-item>
-              <v-list-item-title>
-                Search for your favorite
-                <strong>Genre</strong>
-              </v-list-item-title>
-            </v-list-item>
-          </template>
-          <template #selection="{ attr, on, item, selected }">
-            <v-chip
-              v-bind="attr"
-              :input-value="selected"
-              color="blue-grey"
-              class="white--text"
-              v-on="on"
-            >
-              <v-icon left>
-                mdi-music-clef-treble
-              </v-icon>
-              <span v-text="item.name" />
-            </v-chip>
-          </template>
-          <template #item="{ item }">
-            <v-list-item-avatar
-              color="indigo"
-              class="text-h5 font-weight-light white--text"
-            >
-              {{ item.name.charAt(0) }}
-            </v-list-item-avatar>
-            <v-list-item-content>
-              <v-list-item-title v-text="item.name" />
-              <v-list-item-subtitle v-text="item.symbol" />
-            </v-list-item-content>
-            <v-list-item-action>
-              <v-icon>mdi-music-clef-treble</v-icon>
-            </v-list-item-action>
-          </template>
-        </v-autocomplete>
-      </v-row>
-    </v-container>
-  </v-app-bar>
+  <div>
+    <v-app-bar
+      class="navBar"
+      color="topBar"
+      dark
+      app
+      clipped-left
+      flat
+      dense
+    >
+      <v-container v-if="$vuetify.breakpoint.xsOnly">
+        <v-row class="align-center">
+          <v-avatar
+            class="logoLocoLoroMbl mr-2"
+            :tile="true"
+            height="60"
+            width="65"
+          >
+            <v-img
+              v-if="$vuetify.theme.dark === true"
+              :src="require('../static/LORO-FOR-BLUE-BLACKEYE-M.png')"
+              alt="logo"
+            />
+            <v-img
+              v-if="$vuetify.theme.dark === false"
+              :src="require('../static/LORO-WITH-BACKGROUND-L.png')"
+              alt="logo"
+            />
+          </v-avatar>
+          <v-spacer />
+
+          <v-avatar
+            class="peekLetrasMbl"
+            :tile="true"
+            height="49"
+            width="205"
+          >
+            <v-img
+              v-if="$vuetify.theme.dark === true"
+              :src="require('../static/PEEKBEATS-M.png')"
+              alt="logo"
+            />
+            <v-img
+              v-if="$vuetify.theme.dark === false"
+              :src="require('../static/PEEKBEATS-AZUL-M.png')"
+              alt="logo"
+            />
+          </v-avatar>
+
+          <v-spacer />
+          <v-btn icon color="black">
+            <v-icon>mdi-magnify</v-icon>
+          </v-btn>
+        </v-row>
+      </v-container>
+      <v-container v-else-if="$vuetify.breakpoint.smOnly">
+        <v-row class="align-center">
+          <v-avatar
+            :tile="true"
+            height="44"
+            width="250"
+          >
+            <v-img
+              v-if="$vuetify.theme.dark === true"
+              :src="require('../static/PEEKBEATS-M.png')"
+              alt="logo"
+            />
+            <v-img
+              v-if="$vuetify.theme.dark === false"
+              :src="require('../static/PEEKBEATS-AZUL-M.png')"
+              alt="logo"
+            />
+          </v-avatar>
+          <v-avatar
+            class="logoLocoLoroMedium mr-2"
+            :tile="true"
+            height="70"
+            width="75"
+          >
+            <v-img
+              v-if="$vuetify.theme.dark === true"
+              :src="require('../static/LORO-FOR-BLUE-BLACKEYE-M.png')"
+              alt="logo"
+            />
+            <v-img
+              v-if="$vuetify.theme.dark === false"
+              :src="require('../static/LORO-WITH-BACKGROUND-L.png')"
+              alt="logo"
+            />
+          </v-avatar>
+          <v-spacer />
+          <v-btn icon color="black">
+            <v-icon>mdi-magnify</v-icon>
+          </v-btn>
+        </v-row>
+      </v-container>
+      <v-container v-else>
+        <v-row class="align-center flex-row justify">
+          <v-avatar
+            class="logoLocoLoro mr-2"
+            :tile="true"
+            height="90"
+            width="95"
+          >
+            <v-img
+              v-if="$vuetify.theme.dark === true"
+              :src="require('../static/LORO-FOR-BLUE-BLACKEYE-M.png')"
+              alt="logo"
+            />
+            <v-img
+              v-if="$vuetify.theme.dark === false"
+              :src="require('../static/LORO-WITH-BACKGROUND-L.png')"
+              alt="logo"
+            />
+          </v-avatar>
+          <v-avatar
+            class="logoLocoLetras mr-2"
+            :tile="true"
+            height="44"
+            width="250"
+          >
+            <v-img
+              v-if="$vuetify.theme.dark === true"
+              :src="require('../static/PEEKBEATS-M.png')"
+              alt="logo"
+            />
+            <v-img
+              v-if="$vuetify.theme.dark === false"
+              :src="require('../static/PEEKBEATS-AZUL-M.png')"
+              alt="logo"
+            />
+          </v-avatar>
+          <v-spacer />
+          <v-col cols="3">
+            <v-select
+              class="selectMenu"
+              outlined
+              dense
+              hide-details
+              :items="genres"
+              item-text="name"
+              prepend-icon="mdi-magnify"
+              label="Sort by genre"
+              item-color="primary"
+              :light="$vuetify.theme.dark === false"
+              color="primary"
+            />
+          </v-col>
+          <v-btn class="btnMenu" outlined raised color="accent">
+            Discover
+          </v-btn>
+        </v-row>
+      </v-container>
+    </v-app-bar>
+    <v-divider />
+  </div>
 </template>
 
 <script>
@@ -83,18 +164,59 @@ export default {
     return {
       isLoading: false,
       items: [],
-      model: null,
-      search: null,
-      tab: null,
-      genres: []
+      genres: [],
+      xs: true,
+      sm: true
     }
   },
   async mounted () {
     const genre = await this.$store.dispatch('getAllGenres')
     this.genres = genre
+  },
+  updated () {
+    this.$store.commit('searchValues', this.model)
   }
 }
 </script>
 
 <style lang='scss' scoped>
+.logoLocoLoro {
+  z-index: 1;
+  position: absolute;
+  left: 50%;
+  top: 7px;
+}
+.logoLocoLoroMedium {
+  z-index: 1;
+  position: absolute;
+  left: 50%;
+  top: 15px;
+}
+.logoLocoLoroMbl {
+  z-index: 1;
+  position: absolute;
+  left: 10px;
+  top: 21px;
+}
+.peekLetrasMbl {
+  left: 8%;
+}
+.logoLocoLetras {
+  z-index: 1;
+  position: absolute;
+  left: 10px;
+  top: 2px;
+}
+.selectMenu {
+  z-index: 1;
+  position: absolute;
+  right: 150px;
+  top: 4px;
+}
+.btnMenu {
+  z-index: 1;
+  position: absolute;
+  right: 10px;
+  top: 6px;
+}
 </style>

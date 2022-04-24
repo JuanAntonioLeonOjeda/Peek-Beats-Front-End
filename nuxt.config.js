@@ -1,112 +1,147 @@
 import colors from 'vuetify/es5/util/colors'
 
 export default {
-  ssr: false,
-  target: 'static',
-  // Global page headers: https://go.nuxtjs.dev/config-head
+  mode: 'spa',
+  /*
+  ** Headers of the page
+  */
   head: {
-    titleTemplate: '%s - PeekBeats-Front',
-    title: 'PeekBeats-Front',
-    htmlAttrs: {
-      lang: 'en'
-    },
+    titleTemplate: '%s - ' + process.env.npm_package_name,
+    title: process.env.npm_package_name || '',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: '' },
-      { name: 'format-detection', content: 'telephone=no' }
+      { hid: 'description', name: 'description', content: process.env.npm_package_description || '' }
+      // { 'http-equiv': 'Content-Security-Policy', content: 'upgrade-insecure-requests' }
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.png' }
     ]
   },
-
-  // Global CSS: https://go.nuxtjs.dev/config-css
+  /*
+  ** Customize the progress-bar color
+  */
+  loading: { color: '#fff' },
+  /*
+  ** Global CSS
+  */
   css: [
   ],
-
-  // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
+  /*
+  ** Plugins to load before mounting the App
+  */
   plugins: [
-    { src: '~plugins/vue-carousel-3d', ssr: false },
-    '~/plugins/socket.io.js'
+    '~/plugins/socket.io.js',
+    { src: '~plugins/vue-carousel-3d', ssr: false }
   ],
-
-  // Auto import components: https://go.nuxtjs.dev/config-components
-  components: true,
-
-  // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
+  /*
+  ** Nuxt.js dev-modules
+  */
   buildModules: [
-    // https://go.nuxtjs.dev/eslint
+    // Doc: https://github.com/nuxt-community/eslint-module
     '@nuxtjs/eslint-module',
-    // https://go.nuxtjs.dev/vuetify
     '@nuxtjs/vuetify'
   ],
-
-  // Modules: https://go.nuxtjs.dev/config-modules
+  /*
+  ** Nuxt.js modules
+  */
   modules: [
-    // https://go.nuxtjs.dev/axios
+    // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
+    '@nuxtjs/pwa',
+    // Doc: https://github.com/nuxt-community/dotenv-module
+    '@nuxtjs/dotenv',
     '@nuxtjs/auth'
   ],
-
-  io: {
-    // Options
-    sockets: [
-      {
-        name: 'test',
-        url: 'https://peer-js-server-prueba.herokuapp.com/'
-      }
-    ],
-    server: {
-      cors: {
-        origin: 'https://peek-beats.netlify.app'
-      }
-    }
-  },
-
-  // Axios module configuration: https://go.nuxtjs.dev/config-axios
+  /*
+  ** Axios module configuration
+  ** See https://axios.nuxtjs.org/options
+  */
   axios: {
-    // Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
-    baseURL: 'https://peek-beats.herokuapp.com/api'
+    // baseURL: 'http://localhost:5000/api'
+    baseURL: 'https://peek-beats-back-wrtc.herokuapp.com/api'
   },
 
   auth: {
+    redirect: {
+      login: '/',
+      logout: '/',
+      home: '/home'
+    },
+    watchLoggedIn: true,
     strategies: {
       local: {
         endpoints: {
           login: { url: '/auth/login', method: 'post', propertyName: 'token' },
           logout: { url: '/auth/logout', method: 'post' },
-          user: { url: '/users/me', method: 'get' }
+          user: { url: '/users/me', method: 'get', propertyName: false }
+        },
+        user: {
+          autoFetch: true,
+          property: ''
         },
         tokenType: ''
       }
     }
   },
-
-  // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
+  /*
+  ** vuetify module configuration
+  ** https://github.com/nuxt-community/vuetify-module
+  */
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
     theme: {
-      dark: true,
+      dark: false,
       themes: {
         dark: {
-          primary: colors.blue.darken2,
-          accent: colors.grey.darken3,
+          // 363E43
+          primary: '#fff',
+          accent: '#1CEFBD',
+          accentIcons: 'white',
           secondary: colors.amber.darken3,
           info: colors.teal.lighten1,
           warning: colors.amber.base,
           error: colors.deepOrange.accent4,
-          success: colors.green.accent3
+          success: colors.green.accent3,
+          topBar: '#565EE8',
+          topNavDraw: '#3e454a',
+          navDrawer: '#353A3D',
+          bar: '#353A3D',
+          footer: '#353A3D',
+          mainCards: '#1e1e1e'
+        },
+        light: {
+          primary: '#000000',
+          accent: '#565EE8',
+          accentIcons: '#565EE8',
+          secondary: colors.amber.darken3,
+          info: colors.teal.lighten1,
+          warning: colors.amber.base,
+          error: colors.deepOrange.accent4,
+          success: colors.green.accent3,
+          topBar: '#fff',
+          topNavDraw: '#fff',
+          navDrawer: '#f5f2f2',
+          bar: '#fff',
+          footer: '#fff',
+          mainCards: '#F2F2F2'
+          // red accent-4
         }
       }
     }
   },
-
-  env: {
-    WS_URL: process.env.WS_URL || 'https://peer-js-server-prueba.herokuapp.com/'
-  },
-
-  // Build Configuration: https://go.nuxtjs.dev/config-build
+  /*
+  ** Build configuration
+  */
   build: {
+    /*
+    ** You can extend webpack config here
+    */
+    extend (config, ctx) {
+    }
+  },
+  env: {
+    // WS_URL: process.env.WS_URL || 'http://localhost:5050'
+    WS_URL: process.env.WS_URL || 'https://peer-js-server-prueba.herokuapp.com'
   }
 }

@@ -2,33 +2,23 @@
   <v-app dark>
     <v-main>
       <Nuxt />
-      <!-- <v-overlay :value="overlay">
-        <p>
-          <v-progress-circular
-            indeterminate
-            color="primary"
-          />
-          Lost connection to server, trying to reconnect ...
-        </p>
-    </v-overlay> -->
     </v-main>
   </v-app>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
-  name: 'DefaultLayout',
-  // data () {
-  //   return {
-  //     clipped: false
-  //   }
-  // },
-  // computed: {
-  //   mapState () {
-  //     const overlay = this.$store.state.overlay
-  //     return overlay
-  //   }
-  // },
+  data () {
+    return {
+      clipped: false,
+      title: 'PeekBeats'
+    }
+  },
+  computed: mapState({
+    name: state => state.setting.name,
+    overlay: state => state.setting.overlay
+  }),
   mounted () {
     this.$socket.on('reconnecting', () => {
       this.$store.commit('setting/setOverlay', {
@@ -49,6 +39,5 @@ export default {
       this.$router.push('/error')
     })
   }
-
 }
 </script>

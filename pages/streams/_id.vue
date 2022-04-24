@@ -1,125 +1,258 @@
 <template>
-  <div id="mainFrame">
-    Your stream room is: {{ roomId }}
-    <video id="localVideo" ref="localVideo" autoplay muted>LocalVideo</video>
-    <video id="remoteVideo" ref="remoteVideo" autoplay>RemoteVideo</video>
-    <div v-if="role === 'streamer'" class="bottom-bar d-flex justify-center">
-      <v-btn class="mx-2" fab @click="offCamera()">
-        <v-icon dark>
-          mdi-camera
+  <div>
+    <!-- <NavBar /> -->
+    <NavigationDrawer />
+    <v-row>
+      <v-col
+        cols="8"
+        class="ml-15 pa-5"
+      >
+        <v-card id="screen" flat color="mainCards">
+          <div>
+            <video id="video" class="bigCinema" autoplay>LocalVideo</video>
+          </div>
+        </v-card>
+      </v-col>
+      <v-spacer />
+      <v-col
+        cols="3"
+        class="mr-15 pa-5"
+      >
+        <StreamChat />
+      </v-col>
+    </v-row>
+    <v-card flat class="text-center" color="mainCards">
+      <v-card-title class="ml-50">
+        <div v-if="streamerRole">
+          {{ $auth.user.userName }}, you are streaming!
+        </div>
+        <div v-else>
+          You are watching: {{ stream.streamer.userName }}
+        </div>
+        <v-spacer />
+        <v-icon class="mr-3">
+          mdi-account-group
         </v-icon>
-      </v-btn>
-      <v-btn class="mx-2" fab>
-        <v-icon dark>
-          mdi-microphone
-        </v-icon>
-      </v-btn>
-    </div>
-    <!-- <StreamVideo /> -->
-
-    <StopStream v-if="role === 'streamer'" />
+        <span v-if="stream.currentViewers !== []">
+          {{ getTotalViewers }}
+        </span>
+        <span v-else>
+          0
+        </span>
+      </v-card-title>
+      <v-card-subtitle class="pa-0 mt-5">
+        <div v-if="streamerRole">
+          Music genre: {{ genre }}
+        </div>
+        <div v-else>
+          Music genre: {{ stream.genre.name }}
+        </div>
+      </v-card-subtitle>
+      <v-card-subtitle class="pa-0">
+        <!-- @click="editDescription" -->
+        <v-btn v-if="streamerRole" icon>
+          <v-icon>mdi-square-edit-outline</v-icon>
+        </v-btn>
+        {{ stream.description }}
+      </v-card-subtitle>
+      <v-card-actions>
+        <v-row>
+          <v-col>
+            <div class="text-center">
+              <div v-if="streamerRole">
+                <StopStream />
+                <v-btn class="mx-2" fab>
+                  <v-icon dark>
+                    mdi-camera
+                  </v-icon>
+                </v-btn>
+                <v-btn class="mx-2" fab>
+                  <v-icon dark>
+                    mdi-microphone
+                  </v-icon>
+                </v-btn>
+              </div>
+              <AddFavouriteStreamer v-else />
+            </div>
+          </v-col>
+        </v-row>
+      </v-card-actions>
+    </v-card>
   </div>
 </template>
 
 <script>
-
-const servers = {
-  configuration: {
-    offerToReceiveAudio: true,
-    offerToReceiveVideo: true
-  },
-  iceServers: [
-    { urls: 'stun:stun.l.google.com:19302' },
-    { urls: 'stun:stun1.l.google.com:19302' }
-  ]
-}
-
-const RPC = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection
-const localPC = new RPC(servers)
+import StreamChat from '@/components/StreamChat.vue'
+import StopStream from '@/components/StopStream.vue'
+import AddFavouriteStreamer from '@/components/AddFavouriteStreamer.vue'
+import NavigationDrawer from '@/components/NavigationDrawer.vue'
 
 export default {
-  name: 'StreamPage',
+  components: {
+    StopStream,
+    AddFavouriteStreamer,
+    NavigationDrawer,
+    StreamChat
+  },
   data () {
     return {
-      roomId: this.$route.params.id,
-      role: this.$store.state.role
+      room: this.$route.params.id,
+      streamerRole: this.$store.state.streamer,
+      userName: this.$auth.user.userName,
+      stream: this.$store.state.streamInfo,
+      like: false,
+      genre: this.$store.state.genreName,
+      viewers: 0
     }
   },
-  async beforeMount () {
-    const lastId = localStorage.getItem('lastId')
-    console.log('lastId: ' + lastId)
-    if (lastId) {
-      await this.$socket.emit('leave', this.roomId)
+  computed: {
+    getTotalViewers () {
+      return this.viewers
     }
-    await this.$socket.emit('join', lastId)
-    localStorage.setItem('lastId', this.roomId)
   },
   async mounted () {
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true })
+    !this.$auth.loggedIn ? this.$router.push({ path: '/' }) : console.log('allGood')
+    if (this.streamerRole) {
+      if (this.$socket.disconnected) {
+        await this.$socket.connect()
+      }
+      const peerConnections = {}
+      this.viewers = Object.keys(peerConnections).length
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true })
+      document.getElementById('video').srcObject = stream
+      await this.$socket.emit('join-room', this.$route.params.id, this.$auth.user.userName)
+      await this.$socket.emit('broadcaster')
 
-    this.$refs.localVideo.srcObject = stream
-    this.$store.commit('setCamera', {
-      camera: stream
-    })
+      this.$socket.on('watcher', (id) => {
+        const peer = createStreamerPeer()
 
-    stream.getTracks().forEach((track) => {
-      localPC.addTrack(track, stream)
-    })
+        peerConnections[id] = peer
 
-    const offer = await localPC.createOffer()
-    await localPC.setLocalDescription(offer)
-    console.log('offer: ' + offer)
-    console.log('localPC: ' + localPC)
-    await this.$socket.emit('message', {
-      room: this.roomId,
-      data: localPC.localDescription
-    })
-    console.log('message emitted')
-    localPC.onicecandidate = async (event) => {
-      console.log('event onicecandidate: ' + event)
-      if (event.candidate) {
-        console.log('enent.candidate = true => ' + event.candidate)
-        await this.$socket.emit('message', {
-          room: this.roomId,
-          data: event.candidate
+        stream.getTracks().forEach((track) => {
+          peer.addTrack(track, stream)
         })
-      } else {
-        // eslint-disable-next-line
-        console.log('allhasbeensent')
-      }
-    }
-    localPC.ontrack = (event) => {
-      console.log('ontrack event:' + event)
-      console.log(event.streams)
-      if (event.streams[0]) {
-        console.log(event.streams[0])
-        this.$refs.remoteVideo.srcObject = event.streams[0]
-      }
-    }
-    this.$socket.on('message', async (data) => {
-      if (data.type === 'offer') {
-        console.log('offer: ' + offer)
-        await localPC.setRemoteDescription(new RTCSessionDescription(data))
-        const answer = await localPC.createAnswer()
-        await localPC.setLocalDescription(answer)
-        await this.$socket.emit('message', {
-          room: this.roomId,
-          data: localPC.localDescription
+
+        peer.onicecandidate = (e) => {
+          if (e.candidate) {
+            this.$socket.emit('candidate', id, e.candidate)
+          }
+        }
+        const socket = this.$socket
+        handleNegotiationNeededEvent(peer, socket, id)
+      })
+
+      function createStreamerPeer (store) {
+        const peer = new RTCPeerConnection({
+          iceServers: [
+            {
+              urls: 'stun:stun.l.google.com:19302'
+            }
+          ]
         })
-      } else if (data.type === 'answer') {
-        console.log('answer:' + data)
-        await localPC.setRemoteDescription(new RTCSessionDescription(data))
-      } else {
-        await localPC.addIceCandidate(new RTCIceCandidate(data))
+
+        return peer
       }
-    })
+      async function handleNegotiationNeededEvent (peer, socket, id) {
+        const offer = await peer.createOffer()
+        await peer.setLocalDescription(offer)
+        await socket.emit('offer', id, peer.localDescription)
+      }
+
+      this.$socket.on('answer', (id, description) => {
+        peerConnections[id].setRemoteDescription(description)
+      })
+
+      this.$socket.on('user-connected', (name) => {
+        this.viewers++
+      })
+
+      this.$socket.on('candidate', (id, candidate) => {
+        candidate.usernameFragment = null
+        peerConnections[id].addIceCandidate(new RTCIceCandidate(candidate))
+      })
+
+      this.$socket.on('disconnectPeer', (id) => {
+        peerConnections[id].close()
+        delete peerConnections[id]
+        this.viewers--
+      })
+    } else {
+      this.viewers++
+      let peer
+      let counter = 0
+
+      if (this.$socket.disconnected) {
+        await this.$socket.connect()
+      }
+      await this.$socket.emit('join-room', this.$route.params.id, this.$auth.user.userName)
+      await this.$socket.emit('chat-message', `${this.$auth.user.userName} has joined the room`)
+      await this.$socket.emit('watcher')
+
+      this.$socket.on('offer', (streamerId, description) => {
+        if (counter === 0) {
+          counter++
+          peer = createViewerPeer()
+          const socket = this.$socket
+
+          handleAnswer(peer, streamerId, description, socket)
+
+          peer.ontrack = (e) => {
+            handleTrackEvent(e)
+          }
+          peer.onicecandidate = (e) => {
+            if (e.candidate) {
+              this.$socket.emit('candidate', streamerId, e.candidate)
+            }
+          }
+        }
+      })
+
+      function createViewerPeer () {
+        const peer = new RTCPeerConnection({
+          iceServers: [
+            {
+              urls: 'stun:stun.l.google.com:19302'
+            }
+          ]
+        })
+        return peer
+      }
+
+      async function handleAnswer (peer, streamerId, description, socket) {
+        await peer.setRemoteDescription(description)
+        const answer = await peer.createAnswer()
+
+        await peer.setLocalDescription(answer)
+
+        socket.emit('answer', streamerId, peer.localDescription)
+      }
+
+      function handleTrackEvent (e) {
+        document.getElementById('video').srcObject = e.streams[0]
+      }
+
+      this.$socket.on('candidate', (id, candidate) => {
+        candidate.usernameFragment = null
+        peer
+          .addIceCandidate(new RTCIceCandidate(candidate))
+          .catch(e => console.error(e))
+      })
+
+      this.$socket.on('broadcaster', () => {
+        this.$socket.emit('watcher')
+      })
+    }
   },
   async beforeDestroy () {
-    await this.$socket.emit('leave', this.roomId)
+    await this.$socket.emit('chat-message', `${this.$auth.user.userName} has left the room`)
+    this.$socket.close()
+    if (this.streamerRole) {
+      await this.$store.dispatch('stopStream')
+    }
   },
   methods: {
     offCamera () {
-      this.$store.state.camera.getVideoTracks().forEach((track) => {
+      this.$store.state.setting.camera.getVideoTracks().forEach((track) => {
         track.enabled = !track.enabled
       })
     }
@@ -127,28 +260,41 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
- #mainFrame {
-    #localVideo {
-      z-index: 100;
-      position: absolute;
-      right: 25px;
-      bottom: 25px;
-      background-color: #47494e;
-      height: 150px;
-      width: 200px;
-    }
-    #remoteVideo {
-      z-index: 50;
-      height: calc(100vh - 64px);
-      width: 100vw;
-      background-color: #7f828b;
-    }
-    .bottom-bar {
-      position: absolute;
-      bottom: 25px;
-      width: 100vw;
-      text-align: center;
-    }
-  }
+<style lang="scss">
+.bigCinema {
+  z-index: 50;
+  margin-top: 5px;
+  height: calc(82vh - 75px);
+  width: 100%;
+  background-color: #7f828b  31;
+}
+.bottom-bar {
+  position: absolute;
+  bottom: 25px;
+  width: 100%;
+  text-align: center;
+}
+#screen {
+  height: 75vh;
+}
+.chat-img {
+border-radius: 50%;
+width: 40px;
+height: 40px;
+margin-right: 10px;
+}
+.dialog {
+display: flex;
+padding: 4px 0 0 6px;
+
+// align-items: center;
+// justify-content: center;
+}
+#messages > li:nth-child(odd) {
+  background: rgba(195, 194, 194, 0.236);
+}
+li > p {
+  margin-left: 10px !important;
+  margin-bottom: 0px !important;
+}
 </style>

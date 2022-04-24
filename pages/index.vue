@@ -3,7 +3,11 @@
 </template>
 
 <script>
+import AccessForm from '@/components/AccessForm'
 export default {
-  name: 'IndexPage'
+  name: 'IndexPage',
+  components: {
+    AccessForm
+  }
 }
 </script>
